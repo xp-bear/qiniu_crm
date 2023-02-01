@@ -1,19 +1,13 @@
 # qiniu_crm
 
-## Project setup
-```
-npm install
-```
+针对于七牛云，在线存储文件管理系统，是一款轻量，快速，高效的文件管理系统，完全开源免费，欢迎 star~
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 项目截图
 
-### Compiles and minifies for production
-```
-npm run build
-```
+![image-20230201162357026](assets/image-20230201162357026.png)
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+![image-20230201162411825](assets/image-20230201162411825.png)
+
+![image-20230201162437622](assets/image-20230201162437622.png)
+
+![image-20230201162445495](assets/image-20230201162445495.png)
