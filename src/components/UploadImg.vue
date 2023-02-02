@@ -166,24 +166,26 @@ export default {
                 }
 
                 that.url = base_url + key + "?" + Date.now();
-                console.log("上传成功: ", that.url);
-                console.log(that.fileAddress);
+                // console.log("上传成功: ", that.url);
+                // console.log(that.fileAddress);
                 if (that.fileAddress) {
                   // 在数据库添加一条数据
-                  let data = {
+                  let datas = {
                     file_upload_time: new Date(),
                     file_type: that.ifFileType,
                     file_link: that.url,
                     file_suffix: that.ruleForm.suffix,
-                    file_name: that.ruleForm.name,
-                    file_user_id: -1,
-                    file_user_name: "想走过亚洲的熊",
-                    file_remark: that.ruleForm.remarkName || "当前文件没有备注信息~", //上传文件备注
+                    file_name: that.ruleForm.name + "-" + Date.now(),
+                    file_size: that.fileDetail.size,
+                    file_region: that.ruleForm.region,
+                    file_user_id: that.$store.state.userObjStore.id || 0,
+                    file_user_name: that.$store.state.userObjStore.username || "",
+                    file_remark: that.ruleForm.remarkName || "当前文件没有备注信息！", //上传文件备注
                     file_address: that.fileAddress,
                     file_view: 1,
                   };
-                  insertFileApi(data).then((res) => {
-                    console.log(res);
+                  insertFileApi(datas).then((result) => {
+                    console.log(result);
                   });
 
                   // 禁用上传按钮
@@ -200,12 +202,6 @@ export default {
               },
             };
             observable.subscribe(observer); // 上传over
-
-            this.$message({
-              message: "文件上传成功!",
-              type: "success",
-              duration: 2000,
-            });
           } else {
             this.$message({
               message: "请先选择要上传的文件!",

@@ -1,0 +1,159 @@
+<template>
+  <div class="UserBanner">
+    <div class="avatar-info">
+      <div class="left">
+        <img src="http://cdn.xxoutman.cn/default_avatar.png?1675238963369" alt="" />
+        <el-tag type="info" size="small" class="editinfo" @click="toeditUser">编辑资料</el-tag>
+      </div>
+      <div class="center">
+        <span class="title">想走过亚洲的熊 </span>
+        <p>才、才不是懒得写签名呢！只是在思考！</p>
+        <div class="money">
+          <img src="../assets/bananer.png" alt="" />
+          <span>66</span>
+        </div>
+      </div>
+      <div class="right">
+        <div class="right-num">
+          <div class="right-info">
+            <div>0</div>
+            <div>关注</div>
+          </div>
+          <div class="right-info">
+            <div>0</div>
+            <div>粉丝</div>
+          </div>
+          <div class="right-info">
+            <div>0</div>
+            <div>文件</div>
+          </div>
+        </div>
+        <div class="qiandao">
+          <img src="//ali-imgs.acfun.cn/kos/nlav10360/static/img/sign.cf4133ff.svg" alt="" />
+          <span>签到得香蕉</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "UserBanner",
+  data() {
+    return {};
+  },
+  methods: {
+    toeditUser() {
+      this.$emit("changeComponent", "editUser");
+    },
+  },
+  mounted() {
+    console.log(this.$store.state.userObjStore.username);
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.UserBanner {
+  width: 100%;
+  height: 100%;
+  .avatar-info {
+    width: 100%;
+    height: 172px;
+    display: flex;
+    .left {
+      width: 160px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .editinfo {
+        cursor: pointer;
+        padding: 0 20px;
+        box-shadow: 0 0px 3px 0 rgba(0, 0, 0, 0.1);
+        background: #fff;
+        &:hover {
+          background: #f5f5f5;
+        }
+      }
+      img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 10px;
+        border-radius: 50%;
+      }
+    }
+    .center {
+      width: 470px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      padding-left: 20px;
+      .title {
+        color: rgb(51, 51, 51);
+        font-size: 20px;
+      }
+      p {
+        font-size: 14px;
+        color: #999999;
+      }
+      .money {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 24px;
+          height: 24px;
+          margin-right: 5px;
+        }
+        span {
+          font-family: xp;
+          font-size: 24px;
+          background: linear-gradient(92.05deg, #b487e4 12.09%, #f778ba 42.58%, #ff7b72 84.96%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: rgba(0, 0, 0, 0);
+        }
+      }
+    }
+    .right {
+      width: 210px;
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      .right-num {
+        display: flex;
+        text-align: center;
+        justify-content: space-evenly;
+        .right-info {
+          font-size: 18px;
+          color: #333333;
+          cursor: pointer;
+          &:hover {
+            color: #fd4c5d;
+          }
+          div:nth-child(2) {
+            font-size: 14px;
+            color: #666666;
+          }
+        }
+      }
+      .qiandao {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        height: 52px;
+        cursor: pointer;
+        &:hover {
+          background: #e5e5e5;
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}
+</style>
