@@ -184,20 +184,38 @@ export default {
                     file_address: that.fileAddress,
                     file_view: 1,
                   };
-                  insertFileApi(datas).then((result) => {
-                    console.log(result);
-                  });
-
+                  insertFileApi(datas).then((result) => {}); //在数据库新增一条数据
                   // 禁用上传按钮
                   that.idUpBtn = true; //确认禁用按钮
 
-                  navigator.clipboard.writeText(that.url).then(() => {
-                    that.$message({
-                      message: "上传文件地址已复制到粘贴板!",
-                      type: "success",
-                      duration: 3000,
+                  if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(that.url).then(() => {
+                      that.$message({
+                        message: "上传文件地址已复制到粘贴板!",
+                        type: "success",
+                        duration: 3000,
+                      });
                     });
-                  });
+                  } else {
+                    // 创建text area
+                    const textArea = document.createElement("textarea");
+                    textArea.value = that.url;
+                    // 使text area不在viewport，同时设置不可见
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    return new Promise((resolve, reject) => {
+                      // 执行复制命令并移除文本框
+                      document.execCommand("copy") ? resolve() : reject(new Error("出错了"));
+                      textArea.remove();
+                    }).then(() => {
+                      that.$message({
+                        message: "上传文件地址已复制到粘贴板!",
+                        type: "success",
+                        duration: 3000,
+                      });
+                    });
+                  }
                 }
               },
             };
