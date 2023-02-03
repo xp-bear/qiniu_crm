@@ -347,7 +347,7 @@ export default {
 
   width: 100%;
   height: 100vh;
-  background-image: url(../assets/bg.png);
+  background-image: url(http://cdn.xxoutman.cn/qiniu_bg.png?1675390943521);
   background-size: cover;
   display: flex;
   justify-content: center;

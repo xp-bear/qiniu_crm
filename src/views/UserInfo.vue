@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       isNavNumber: 0,
-      comName: "editUser", //动态组件的切换
+      comName: "UserBanner", //动态组件的切换 editUser
     };
   },
   methods: {

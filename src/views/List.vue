@@ -2,12 +2,13 @@
   <div class="List">
     <!-- 头部顶部栏 -->
     <div class="top">
-      <img src="../assets/logo.png" alt="" />
+      <img v-if="!userObj" src="../assets/data.png" alt="" />
+      <img v-else src="../assets/logo.png" alt="" />
       <div class="logo">
-        <el-button type="success" style="height: 40px; margin-top: 10px; margin-right: 10px" @click="toLoadAll">
+        <!-- <el-button type="success" style="height: 40px; margin-top: 10px; margin-right: 10px" @click="toLoadAll">
           <i class="el-icon-box"></i>
           <span>数据星球 Home</span>
-        </el-button>
+        </el-button> -->
         <el-button type="primary" style="height: 40px; margin-top: 10px; margin-right: 10px" @click="toUpLoad">
           <i class="el-icon-document-remove"></i>
           <span>上传文件 Go</span>
@@ -49,7 +50,7 @@
         <!-- 角标 -->
         <div class="tag"><img :src="require(`../assets/types/${item.file_type}.png`)" alt="" /></div>
         <!-- 文件信息 -->
-        <div class="file-name eclipse">{{ item.file_name + item.file_suffix }}</div>
+        <div class="file-name eclipse">{{ item.file_name.split("-")[0] + item.file_suffix }}</div>
       </div>
     </div>
 
