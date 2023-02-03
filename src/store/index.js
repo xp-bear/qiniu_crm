@@ -12,6 +12,10 @@ export default new Vuex.Store({
     getUser(state, data) {
       state.userObjStore = data;
     },
+    // 增加香蕉
+    insertB(state) {
+      state.userObjStore ? state.userObjStore.banana_num++ : "";
+    },
   },
   actions: {},
   modules: {},

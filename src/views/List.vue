@@ -5,18 +5,18 @@
       <img v-if="!userObj" src="../assets/data.png" alt="" />
       <img v-else src="../assets/logo.png" alt="" />
       <div class="logo">
-        <!-- <el-button type="success" style="height: 40px; margin-top: 10px; margin-right: 10px" @click="toLoadAll">
+        <el-button v-if="userObj.email == '1693889638@qq.com'" type="success" style="height: 40px; margin-top: 10px; margin-right: 10px" @click="toLoadAll">
           <i class="el-icon-box"></i>
           <span>数据星球 Home</span>
-        </el-button> -->
+        </el-button>
         <el-button type="primary" style="height: 40px; margin-top: 10px; margin-right: 10px" @click="toUpLoad">
           <i class="el-icon-document-remove"></i>
           <span>上传文件 Go</span>
         </el-button>
         <div v-if="!userObj" class="login-register" @click="toLogin">登录/注册</div>
         <div v-else class="avatar" @click="toUserInfo">
-          <img :src="this.$store.state.userObjStore.avatar" alt="" />
-          <span>{{ this.$store.state.userObjStore.username }}</span>
+          <img :src="$store.state.userObjStore.avatar" alt="" />
+          <span>{{ $store.state.userObjStore.username }}</span>
         </div>
       </div>
     </div>
@@ -113,7 +113,7 @@
               <span style="width: 85px">文件浏览量:</span><el-tag style="flex: 1" class="eclipse" type="danger">{{ fileDetail.file_view }}</el-tag>
             </li>
             <li>
-              文件备注信息: <code style="font-weight: 700; font-family: xp">{{ fileDetail.file_remark }}</code>
+              文件备注信息: <code style="font-family: xp">{{ fileDetail.file_remark }}</code>
             </li>
           </ul>
           <!-- 下载按钮 -->
@@ -155,7 +155,7 @@ export default {
     if (this.userObj) {
       // 保存用户信息到vuex中
       this.$store.commit("getUser", this.userObj);
-      // console.log("vuex的数据", this.$store.state.userObjStore);
+      console.log("vuex的数据", this.$store.state.userObjStore);
 
       // 加载该用户的所有上传的数据
       findFileApi({ user_id: this.userObj ? this.userObj.id : 0 || 0 }).then((res) => {
@@ -353,18 +353,33 @@ export default {
     },
     // 加载所有数据
     toLoadAll() {
-      console.log(this.userObj);
+      // console.log(this.userObj);
       // 没有数据,加载数据星球
       if (!this.userObj) {
         findAllFileApi().then((res) => {
           this.filesArray = res.message;
         });
       } else {
-        this.$message({
-          message: "请先退出登录状态，在进入数据星球！",
+        this.$confirm("是否退出登录状态，进入数据星球", "熊仔图床提示您", {
+          confirmButtonText: "确认退出",
+          cancelButtonText: "取消",
           type: "warning",
-          duration: 2000,
-        });
+          customClass: "exitLogin",
+        })
+          .then(() => {
+            localStorage.clear();
+            this.userObj = "";
+            findAllFileApi().then((res) => {
+              this.filesArray = res.message;
+            });
+          })
+          .catch(() => {
+            // this.$message({
+            //   message: "用户已经取消!",
+            //   type: "info",
+            //   duration: 2000,
+            // });
+          });
       }
     },
   },
@@ -518,7 +533,7 @@ export default {
       overflow: hidden;
       /deep/.el-tag {
         font-size: 16px;
-        font-weight: 700;
+        // font-weight: 700;
         font-family: xp;
         letter-spacing: 0.05em;
       }

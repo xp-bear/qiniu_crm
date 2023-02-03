@@ -42,6 +42,14 @@ export default {
       comName: "UserBanner", //动态组件的切换 editUser
     };
   },
+  mounted() {
+    let data = "";
+    data = JSON.parse(localStorage.getItem("user"));
+    if (data) {
+      // 保存用户信息到vuex中
+      this.$store.commit("getUser", data);
+    }
+  },
   methods: {
     // 跳转图床
     toHome() {
@@ -55,14 +63,13 @@ export default {
       this.$message({
         message: "退出登录成功！",
         type: "success",
-        duration: 2000,
+        duration: 1000,
       });
       setTimeout(() => {
         this.$router.push({
-          path: "/",
+          path: "/login",
         });
-      }, 2000);
-      console.log(1);
+      }, 1000);
     },
     // 切换nav
     changeNav(index) {

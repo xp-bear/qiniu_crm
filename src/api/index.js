@@ -24,3 +24,5 @@ export const findAllFileApi = (data) => service.post("/findallfile", data);
 export const deleteFileApi = (data) => service.post("/deletefile", data);
 // 增加浏览量接口
 export const updateScreenNumberApi = (data) => service.post("/updatescreennumber", data);
+// 增加香蕉接口
+export const insertBananaApi = (data) => service.post("/insertbanana", data);

@@ -200,11 +200,11 @@ export default {
                 this.$router.push({
                   path: "/",
                 });
-              }, 2000);
+              }, 1000);
               return this.$message({
                 message: res.message,
                 type: "success",
-                duration: 2000,
+                duration: 1000,
               });
             }
           });
@@ -252,11 +252,11 @@ export default {
                   this.rGchecked = false;
                   setTimeout(() => {
                     this.rgState = 0;
-                  }, 2000);
+                  }, 1000);
                   return this.$message({
                     message: "注册成功",
                     type: "success",
-                    duration: 2000,
+                    duration: 1000,
                   });
                 });
               } else {

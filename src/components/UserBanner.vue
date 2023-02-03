@@ -2,15 +2,15 @@
   <div class="UserBanner">
     <div class="avatar-info">
       <div class="left">
-        <img src="http://cdn.xxoutman.cn/default_avatar.png?1675238963369" alt="" />
+        <img :src="$store.state.userObjStore.avatar" alt="" />
         <el-tag type="info" size="small" class="editinfo" @click="toeditUser">编辑资料</el-tag>
       </div>
       <div class="center">
-        <span class="title">想走过亚洲的熊 </span>
-        <p>才、才不是懒得写签名呢！只是在思考！</p>
+        <span class="title">{{ $store.state.userObjStore.username }} </span>
+        <p>{{ $store.state.userObjStore.sign }}</p>
         <div class="money">
           <img src="../assets/bananer.png" alt="" />
-          <span>66</span>
+          <span>{{ $store.state.userObjStore.banana_num }}</span>
         </div>
       </div>
       <div class="right">
@@ -28,16 +28,17 @@
             <div>文件</div>
           </div>
         </div>
-        <div class="qiandao">
+        <button class="qiandao" @click="insertBanana" :disabled="true">
           <img src="//ali-imgs.acfun.cn/kos/nlav10360/static/img/sign.cf4133ff.svg" alt="" />
           <span>签到得香蕉</span>
-        </div>
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { insertBananaApi } from "@/api/index";
 export default {
   name: "UserBanner",
   data() {
@@ -47,9 +48,27 @@ export default {
     toeditUser() {
       this.$emit("changeComponent", "editUser");
     },
+    // 增加香蕉接口
+    insertBanana() {
+      // 修改vuex的值
+      this.$store.commit("insertB");
+      // 修改localstorage的值
+      let datas = JSON.parse(localStorage.getItem("user"));
+      datas.banana_num++;
+      // console.log(datas);
+      localStorage.setItem("user", JSON.stringify(datas));
+
+      insertBananaApi({ user_id: this.$store.state.userObjStore.id }).then((res) => {
+        this.$message({
+          message: "签到成功！",
+          type: "success",
+          duration: 1000,
+        });
+      });
+    },
   },
   mounted() {
-    console.log(this.$store.state.userObjStore.username);
+    // console.log(this.$store.state.userObjStore.username);
   },
 };
 </script>
@@ -145,12 +164,21 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        vertical-align: middle;
+        border: 0;
         height: 52px;
+        background: #fff;
         cursor: pointer;
         &:hover {
           background: #e5e5e5;
           border-radius: 5px;
+        }
+        span {
+          height: 24px;
+          line-height: 28px;
+        }
+        img {
+          margin-right: 2px;
+          vertical-align: baseline;
         }
       }
     }
