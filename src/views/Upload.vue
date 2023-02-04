@@ -20,5 +20,6 @@ export default {
 .Upload {
   height: 100vh;
   background-color: #fafafa;
+  overflow-x: hidden;
 }
 </style>

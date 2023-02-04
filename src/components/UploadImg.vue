@@ -45,6 +45,9 @@
       <div v-else-if="ifFileType == 8" style="display: flex; justify-content: center; align-items: center">
         <img src="@/assets/types/8.png" />
       </div>
+      <div v-else-if="ifFileType == 9" style="display: flex; justify-content: center; align-items: center">
+        <img src="@/assets/types/9.png" />
+      </div>
     </div>
     <!-- 上传进度条 -->
     <el-progress style="margin-top: 2px" :stroke-width="6" :text-inside="true" :show-text="false" :percentage="proceed"></el-progress>
@@ -268,7 +271,7 @@ export default {
       this.ruleForm.name = this.fileDetail.name.split(".")[0]; //获取文件名称
       this.ruleForm.suffix = "." + this.fileDetail.name.split(".")[1]; //获取文件名称
 
-      if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico")) {
+      if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
         this.ifFileType = 0;
       } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov")) {
         this.ifFileType = 1;
@@ -284,6 +287,8 @@ export default {
         this.ifFileType = 6;
       } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
         this.ifFileType = 7;
+      } else if (type.includes(".mp3") || type.includes(".MP3")) {
+        this.ifFileType = 9;
       } else {
         this.ifFileType = 8;
       }
@@ -296,7 +301,7 @@ export default {
       this.ruleForm.name = this.fileDetail.name.split(".")[0]; //获取文件名称
       this.ruleForm.suffix = "." + this.fileDetail.name.split(".")[1]; //获取文件名称
       let type = this.fileDetail.name;
-      if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico")) {
+      if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
         this.ifFileType = 0;
       } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov")) {
         this.ifFileType = 1;
@@ -312,6 +317,8 @@ export default {
         this.ifFileType = 6;
       } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
         this.ifFileType = 7;
+      } else if (type.includes(".mp3") || type.includes(".MP3")) {
+        this.ifFileType = 9;
       } else {
         this.ifFileType = 8;
       }
@@ -345,7 +352,7 @@ export default {
             this.ruleForm.name = this.fileDetail.name.split(".")[0]; //获取文件名称
             this.ruleForm.suffix = "." + this.fileDetail.name.split(".")[1]; //获取文件名称
             let type = this.fileDetail.name;
-            if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico")) {
+            if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
               this.ifFileType = 0;
             } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov")) {
               this.ifFileType = 1;
@@ -361,6 +368,8 @@ export default {
               this.ifFileType = 6;
             } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
               this.ifFileType = 7;
+            } else if (type.includes(".mp3") || type.includes(".MP3")) {
+              this.ifFileType = 9;
             } else {
               this.ifFileType = 8;
             }

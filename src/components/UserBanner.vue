@@ -28,7 +28,7 @@
             <div>文件</div>
           </div>
         </div>
-        <button class="qiandao" @click="insertBanana" :disabled="true">
+        <button class="qiandao" @click="insertBanana">
           <img src="//ali-imgs.acfun.cn/kos/nlav10360/static/img/sign.cf4133ff.svg" alt="" />
           <span>签到得香蕉</span>
         </button>
@@ -39,36 +39,93 @@
 
 <script>
 import { insertBananaApi } from "@/api/index";
+import { getNextDate } from "@/utils/time_format";
 export default {
   name: "UserBanner",
   data() {
-    return {};
+    return {
+      isBananaState: false, //今天是否签到
+    };
+  },
+  mounted() {
+    // let timer = new Date();
+    //   let Y = timer.getFullYear(); //年
+    //   let M = timer.getMonth() + 1; //月
+    //   let D = timer.getDate(); //日
+    // console.log(getNextDate(`${Y}-${M}-${D}`));
+    console.log();
   },
   methods: {
+    getNextDate,
     toeditUser() {
       this.$emit("changeComponent", "editUser");
     },
     // 增加香蕉接口
     insertBanana() {
-      // 修改vuex的值
-      this.$store.commit("insertB");
-      // 修改localstorage的值
-      let datas = JSON.parse(localStorage.getItem("user"));
-      datas.banana_num++;
-      // console.log(datas);
-      localStorage.setItem("user", JSON.stringify(datas));
+      if (!localStorage.getItem("time")) {
+        // 判断是不是今天
+        // 在localstorage保存今天的日期
+        let timer = new Date();
+        let Y = timer.getFullYear(); //年
+        let M = timer.getMonth() + 1; //月
+        let D = timer.getDate(); //日
+        localStorage.setItem("time", getNextDate(`${Y}-${M}-${D}`));
 
-      insertBananaApi({ user_id: this.$store.state.userObjStore.id }).then((res) => {
-        this.$message({
-          message: "签到成功！",
-          type: "success",
-          duration: 1000,
+        // 修改vuex的值
+        this.$store.commit("insertB");
+        // 修改localstorage的值
+        let datas = JSON.parse(localStorage.getItem("user"));
+        datas.banana_num++;
+        // console.log(datas);
+        localStorage.setItem("user", JSON.stringify(datas));
+
+        insertBananaApi({ user_id: this.$store.state.userObjStore.id }).then((res) => {
+          this.$message({
+            message: "签到成功！",
+            type: "success",
+            duration: 1000,
+          });
         });
-      });
+      } else {
+        let timer = new Date();
+        let Y = timer.getFullYear(); //年
+        let M = timer.getMonth() + 1; //月
+        M = M < 10 ? "0" + M : M;
+        let D = timer.getDate(); //日
+        D = D < 10 ? "0" + D : D;
+        let local_time = localStorage.getItem("time");
+
+        if (local_time == `${Y}-${M}-${D}`) {
+          let timer = new Date();
+          let Y = timer.getFullYear(); //年
+          let M = timer.getMonth() + 1; //月
+          let D = timer.getDate(); //日
+          localStorage.setItem("time", getNextDate(`${Y}-${M}-${D}`));
+
+          // 修改vuex的值
+          this.$store.commit("insertB");
+          // 修改localstorage的值
+          let datas = JSON.parse(localStorage.getItem("user"));
+          datas.banana_num++;
+          // console.log(datas);
+          localStorage.setItem("user", JSON.stringify(datas));
+
+          insertBananaApi({ user_id: this.$store.state.userObjStore.id }).then((res) => {
+            this.$message({
+              message: "签到成功！",
+              type: "success",
+              duration: 1000,
+            });
+          });
+        } else {
+          this.$message({
+            message: "今天已经签到过！",
+            type: "error",
+            duration: 1000,
+          });
+        }
+      }
     },
-  },
-  mounted() {
-    // console.log(this.$store.state.userObjStore.username);
   },
 };
 </script>

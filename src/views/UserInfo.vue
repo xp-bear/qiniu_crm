@@ -59,7 +59,8 @@ export default {
     },
     // 退出登录
     loginOut() {
-      localStorage.clear();
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       this.$message({
         message: "退出登录成功！",
         type: "success",
@@ -89,6 +90,8 @@ export default {
 
 <style lang="less" scoped>
 .UserInfo {
+  height: 100vh;
+  background-color: #fafafa;
   .active {
     color: #fd4c5d;
   }
