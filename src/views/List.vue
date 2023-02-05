@@ -2,8 +2,8 @@
   <div class="List">
     <!-- 头部顶部栏 -->
     <div class="top">
-      <img v-if="!userObj" src="../assets/data.png" alt="" />
-      <img v-else src="../assets/logo.png" alt="" />
+      <!-- <img v-if="!userObj" src="../assets/data.png" alt="" /> -->
+      <img :src="isLogoState ? require('../assets/logo.png') : require('../assets/data.png')" alt="" />
       <div class="logo">
         <a href="https://github.com/xp-bear" target="_blank"> <div class="github"></div> </a>
         <el-button v-if="userObj?.email == '1693889638@qq.com'" type="success" style="height: 40px; margin-right: 10px" @click="toLoadAll">
@@ -51,6 +51,9 @@
         <div v-else-if="item.file_type == 9" style="display: flex; justify-content: center">
           <img style="width: 88px; height: 88px" src="../assets/types/9.png" alt="" />
         </div>
+        <div v-else-if="item.file_type == 10" style="display: flex; justify-content: center">
+          <img style="width: 88px; height: 88px" src="../assets/types/10.png" alt="" />
+        </div>
         <!-- 角标 -->
         <div class="tag"><img :src="require(`../assets/types/${item.file_type}.png`)" alt="" /></div>
         <!-- 文件信息 -->
@@ -87,10 +90,8 @@
           <div v-else-if="fileDetail.file_type == 8" style="height: 100%; display: flex; justify-content: center; align-items: center">
             <img style="width: 128px; height: 128px" src="../assets/types/8.png" alt="" />
           </div>
-          <div
-            v-else-if="fileDetail.file_type == 9"
-            style="width: 100%; height: 100%; background: linear-gradient(-65deg, #43c6ac, #f8ffae); display: flex; justify-content: center; align-items: center"
-          >
+          <div v-else-if="fileDetail.file_type == 9" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center">
+            <!--  background: linear-gradient(-65deg, #43c6ac, #f8ffae); -->
             <!-- <img style="width: 128px; height: 128px" src="../assets/types/8.png" alt="" /> -->
             <!-- <audio :src="fileDetail.file_link" autoplay controls></audio> -->
             <div class="audio green-audio-player">
@@ -104,7 +105,7 @@
               <div class="controls">
                 <span class="current-time"> {{ currentMusicTime }} </span>
                 <!-- 宽度为进度条 -->
-                <el-slider :show-tooltip="false" style="width: 210px" v-model="process" @input="changeMusic()"></el-slider>
+                <el-slider :show-tooltip="false" style="width: 210px" v-model="process" @change="changeMusic()"></el-slider>
                 <span class="total-time">{{ totalMusicTime }} </span>
               </div>
               <div class="volume">
@@ -130,6 +131,9 @@
                 <source :src="fileDetail.file_link" type="audio/mpeg" />
               </audio>
             </div>
+          </div>
+          <div v-else-if="fileDetail.file_type == 10" style="height: 100%; display: flex; justify-content: center; align-items: center">
+            <img style="width: 128px; height: 128px" src="../assets/types/10.png" alt="" />
           </div>
           <!-- </el-tooltip> -->
         </div>
@@ -201,6 +205,7 @@ export default {
       totalMusicTime: "0:00", //总时长 5:15
       currentTime: 0, //播放时间
       totalTime: 0,
+      isLogoState: true, //切换logo图片
     };
   },
   watch: {
@@ -271,26 +276,28 @@ export default {
       this.isPlaying = true;
       setTimeout(() => {
         // 监听音频播放时间
-        this.$refs.audio.ontimeupdate = () => {
-          let currentTime = parseInt(this.$refs.audio.currentTime.toFixed(0));
-          let duration = parseInt(this.$refs.audio.duration.toFixed(0));
-          let currentTimeremainder = currentTime % 60;
-          currentTimeremainder = currentTimeremainder < 10 ? "0" + currentTimeremainder : currentTimeremainder;
-          // 进度条进度
-          // let percentage = parseFloat(((currentTime / duration) * 100).toFixed(2));
-          // this.processMusic = percentage;
-          // this.processMusic = percentage;
-          this.currentMusicTime = Math.floor(currentTime / 60) + ":" + currentTimeremainder;
-          this.totalMusicTime = Math.floor(duration / 60) + ":" + (duration % 60);
-          this.currentTime = currentTime;
-          this.totalTime = duration;
-          // console.log(percentage);
-          // console.log(`currentTime: ${Math.floor(currentTime / 60) + ":" + currentTimeremainder} , duration: ${Math.floor(duration / 60) + ":" + (duration % 60)}`);
-          // 做判断,播放结束
-          if (this.currentTime >= this.totalTime) {
-            this.isPlaying = false;
-          }
-        };
+        if (this.$refs.audio) {
+          this.$refs.audio.ontimeupdate = () => {
+            let currentTime = parseInt(this.$refs.audio.currentTime.toFixed(0));
+            let duration = parseInt(this.$refs.audio.duration.toFixed(0));
+            let currentTimeremainder = currentTime % 60;
+            currentTimeremainder = currentTimeremainder < 10 ? "0" + currentTimeremainder : currentTimeremainder;
+            // 进度条进度
+            // let percentage = parseFloat(((currentTime / duration) * 100).toFixed(2));
+            // this.processMusic = percentage;
+            // this.processMusic = percentage;
+            this.currentMusicTime = Math.floor(currentTime / 60) + ":" + currentTimeremainder;
+            this.totalMusicTime = Math.floor(duration / 60) + ":" + (duration % 60);
+            this.currentTime = currentTime;
+            this.totalTime = duration;
+            // console.log(percentage);
+            // console.log(`currentTime: ${Math.floor(currentTime / 60) + ":" + currentTimeremainder} , duration: ${Math.floor(duration / 60) + ":" + (duration % 60)}`);
+            // 做判断,播放结束
+            if (this.currentTime >= this.totalTime) {
+              this.isPlaying = false;
+            }
+          };
+        }
       }, 500);
     },
 
@@ -457,6 +464,9 @@ export default {
         this.filesArray = res.message;
       });
 
+      // 修改logo图片
+      this.isLogoState = false;
+
       // if (!this.userObj) {
       //   findAllFileApi().then((res) => {
       //     this.filesArray = res.message;
@@ -528,8 +538,9 @@ export default {
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     img {
-      height: 100%;
+      height: 60px;
     }
     .logo {
       display: flex;
@@ -541,6 +552,7 @@ export default {
         border: 1px solid transparent;
         border-radius: 5px;
         cursor: pointer;
+        box-sizing: border-box;
         &:hover {
           border: 1px solid #66b1ff;
         }

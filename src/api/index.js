@@ -26,3 +26,5 @@ export const deleteFileApi = (data) => service.post("/deletefile", data);
 export const updateScreenNumberApi = (data) => service.post("/updatescreennumber", data);
 // 增加香蕉接口
 export const insertBananaApi = (data) => service.post("/insertbanana", data);
+// 10.修改用户信息接口
+export const updateUserInfoApi = (data) => service.post("/updateuserinfo", data);

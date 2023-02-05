@@ -48,6 +48,9 @@
       <div v-else-if="ifFileType == 9" style="display: flex; justify-content: center; align-items: center">
         <img src="@/assets/types/9.png" />
       </div>
+      <div v-else-if="ifFileType == 10" style="display: flex; justify-content: center; align-items: center">
+        <img src="@/assets/types/10.png" />
+      </div>
     </div>
     <!-- 上传进度条 -->
     <el-progress style="margin-top: 2px" :stroke-width="6" :text-inside="true" :show-text="false" :percentage="proceed"></el-progress>
@@ -268,8 +271,9 @@ export default {
         this.fileDetail = document.getElementById("file").files[0];
       }
       // console.log(this.fileDetail);
-      this.ruleForm.name = this.fileDetail.name.split(".")[0]; //获取文件名称
-      this.ruleForm.suffix = "." + this.fileDetail.name.split(".")[1]; //获取文件名称
+      let names = this.fileDetail.name.split(".");
+      this.ruleForm.name = names[0]; //获取文件名称
+      this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
 
       if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
         this.ifFileType = 0;
@@ -289,6 +293,8 @@ export default {
         this.ifFileType = 7;
       } else if (type.includes(".mp3") || type.includes(".MP3")) {
         this.ifFileType = 9;
+      } else if (type.includes(".exe") || type.includes(".EXE")) {
+        this.ifFileType = 10;
       } else {
         this.ifFileType = 8;
       }
@@ -298,8 +304,9 @@ export default {
       e.preventDefault();
       // console.log(e.dataTransfer.files);
       this.fileDetail = e.dataTransfer.files[0];
-      this.ruleForm.name = this.fileDetail.name.split(".")[0]; //获取文件名称
-      this.ruleForm.suffix = "." + this.fileDetail.name.split(".")[1]; //获取文件名称
+      let names = this.fileDetail.name.split(".");
+      this.ruleForm.name = names[0]; //获取文件名称
+      this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
       let type = this.fileDetail.name;
       if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
         this.ifFileType = 0;
@@ -319,6 +326,8 @@ export default {
         this.ifFileType = 7;
       } else if (type.includes(".mp3") || type.includes(".MP3")) {
         this.ifFileType = 9;
+      } else if (type.includes(".exe") || type.includes(".EXE")) {
+        this.ifFileType = 10;
       } else {
         this.ifFileType = 8;
       }
@@ -349,8 +358,9 @@ export default {
             // console.log(file);
             // 上传文件操作
             this.fileDetail = file;
-            this.ruleForm.name = this.fileDetail.name.split(".")[0]; //获取文件名称
-            this.ruleForm.suffix = "." + this.fileDetail.name.split(".")[1]; //获取文件名称
+            let names = this.fileDetail.name.split(".");
+            this.ruleForm.name = names[0]; //获取文件名称
+            this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
             let type = this.fileDetail.name;
             if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
               this.ifFileType = 0;
@@ -370,6 +380,8 @@ export default {
               this.ifFileType = 7;
             } else if (type.includes(".mp3") || type.includes(".MP3")) {
               this.ifFileType = 9;
+            } else if (type.includes(".exe") || type.includes(".EXE")) {
+              this.ifFileType = 10;
             } else {
               this.ifFileType = 8;
             }

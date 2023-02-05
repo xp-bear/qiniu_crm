@@ -16,15 +16,15 @@
       <div class="right">
         <div class="right-num">
           <div class="right-info">
-            <div>0</div>
+            <div>6</div>
             <div>关注</div>
           </div>
           <div class="right-info">
-            <div>0</div>
+            <div>6399</div>
             <div>粉丝</div>
           </div>
           <div class="right-info">
-            <div>0</div>
+            <div>52</div>
             <div>文件</div>
           </div>
         </div>

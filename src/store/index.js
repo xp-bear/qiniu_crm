@@ -16,6 +16,12 @@ export default new Vuex.Store({
     insertB(state) {
       state.userObjStore ? state.userObjStore.banana_num++ : "";
     },
+    // 修改用户信息
+    updateUserInfo(state, obj) {
+      state.userObjStore ? (state.userObjStore.avatar = obj.avatar) : "";
+      state.userObjStore ? (state.userObjStore.username = obj.username) : "";
+      state.userObjStore ? (state.userObjStore.sign = obj.sign) : "";
+    },
   },
   actions: {},
   modules: {},

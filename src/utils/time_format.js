@@ -17,6 +17,7 @@ export const dateOne = (e) => {
   ss < 10 ? (ss = "0" + ss) : ss;
   return `${Y}/${M}/${D}  ${hh}:${mm}`;
 };
+
 // 获取某天日期的下一天，默认为第二天 默认输出格式为yyyy-mm-dd
 export const getNextDate = (date, day = 1, format = "{y}-{m}-{d}") => {
   if (date) {

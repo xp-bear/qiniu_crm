@@ -3,7 +3,7 @@
     <div class="logo" @click="toHome"><img src="../assets/logo.png" alt="" /></div>
     <div class="log">
       <el-button type="danger" @click="toList" style="background-color: #fd4c5d; font-size: 16px; box-sizing: border-box; height: 40px">
-        <i class="el-icon-upload el-icon--right"></i> 图床服务器
+        <i class="iconfont icon-ziliaoku"></i> <span>熊仔图床集</span>
       </el-button>
     </div>
   </div>
