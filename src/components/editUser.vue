@@ -32,7 +32,8 @@
         </div>
       </div>
     </div>
-    <el-button type="primary" style="width: 20%" @click="confirmEdit">确认修改</el-button>
+    <el-button type="danger" style="width: 20%" @click="confirmEdit">确认修改</el-button>
+    <el-button type="warning" style="width: 20%" @click="backEdit">返回</el-button>
   </div>
 </template>
 
@@ -57,35 +58,47 @@ export default {
   methods: {
     dateOne,
     // 切换动态组件
+    backEdit() {
+      // 返回用户展示界面
+      this.$emit("changeComponent", "UserBanner");
+    },
     confirmEdit() {
       // 做一个数据的提交
       this.$confirm("是否要修改用户信息, 是否继续?", "熊仔图床提示您", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-      }).then(() => {
-        setTimeout(async () => {
-          // 保存数据到数据库
-          let userData = { avatar: this.url, username: this.nickname, sign: this.sign, user_id: this.$store.state.userObjStore.id };
-          await updateUserInfoApi(userData);
-          // 修改vuex的数据
-          this.$store.commit("updateUserInfo", userData);
-          // 修改和localstorage的的数据
-          let user = JSON.parse(localStorage.getItem("user"));
-          user.avatar = this.url;
-          user.username = this.nickname;
-          user.sign = this.sign;
-          localStorage.setItem("user", JSON.stringify(user));
+      })
+        .then(() => {
+          setTimeout(async () => {
+            // 保存数据到数据库
+            let userData = { avatar: this.url, username: this.nickname, sign: this.sign, user_id: this.$store.state.userObjStore.id };
+            await updateUserInfoApi(userData);
+            // 修改vuex的数据
+            this.$store.commit("updateUserInfo", userData);
+            // 修改和localstorage的的数据
+            let user = JSON.parse(localStorage.getItem("user"));
+            user.avatar = this.url;
+            user.username = this.nickname;
+            user.sign = this.sign;
+            localStorage.setItem("user", JSON.stringify(user));
+            this.$message({
+              message: "用户信息修改成功",
+              type: "success",
+              duration: 1000,
+            });
+            setTimeout(() => {
+              this.$emit("changeComponent", "UserBanner");
+            }, 1000);
+          }, 300);
+        })
+        .catch(() => {
           this.$message({
-            message: "用户信息修改成功",
-            type: "success",
+            message: "用户取消修改！",
+            type: "info",
             duration: 1000,
           });
-          setTimeout(() => {
-            this.$emit("changeComponent", "UserBanner");
-          }, 1000);
-        }, 300);
-      });
+        });
     },
     // 选择图片,获得临时链接
     async showPhoto() {

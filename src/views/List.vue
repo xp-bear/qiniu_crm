@@ -3,10 +3,10 @@
     <!-- 头部顶部栏 -->
     <div class="top">
       <!-- <img v-if="!userObj" src="../assets/data.png" alt="" /> -->
-      <img :src="isLogoState ? require('../assets/logo.png') : require('../assets/data.png')" alt="" />
+      <img @click="changeState" :src="isLogoState ? require('../assets/logo.png') : require('../assets/data.png')" alt="" />
       <div class="logo">
         <a href="https://github.com/xp-bear" target="_blank"> <div class="github"></div> </a>
-        <el-button v-if="userObj?.email == '1693889638@qq.com'" type="success" style="height: 40px; margin-right: 10px" @click="toLoadAll">
+        <el-button v-if="userObj?.email == '1693889638@qq.com' || userObj?.email == '2603236601@qq.com'" type="success" style="height: 40px; margin-right: 10px" @click="toLoadAll">
           <i class="el-icon-box"></i>
           <span>数据星球 Home</span>
         </el-button>
@@ -21,6 +21,7 @@
         </div>
       </div>
     </div>
+    <!-- 搜索栏数据查询 -->
     <el-empty v-if="filesArray.length <= 0" description="暂无数据，快去上传数据吧！"></el-empty>
     <!-- 数据展示页面 -->
     <div class="datas">
@@ -512,6 +513,19 @@ export default {
       this.currentTime = (this.process / 100) * this.totalTime;
       this.$refs.audio.currentTime = this.currentTime;
     },
+    // 点击数据星球
+    changeState() {
+      // console.log(this.isLogoState);
+      if (this.isLogoState == false) {
+        // 数据星球点击
+        // 加载该用户的所有上传的数据
+        findFileApi({ user_id: this.userObj ? this.userObj.id : 0 || 0 }).then((res) => {
+          this.filesArray = res.message;
+          // console.log(this.filesArray);
+        });
+        this.isLogoState = true;
+      }
+    },
   },
   components: {},
 };
@@ -528,6 +542,9 @@ export default {
   }
   /deep/.el-dialog__headerbtn {
     top: 18px;
+  }
+  /deep/.el-message-box__wrapper {
+    z-index: 99999 !important;
   }
   width: 1200px;
   margin: 0 auto;

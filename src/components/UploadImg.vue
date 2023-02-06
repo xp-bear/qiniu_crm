@@ -248,6 +248,7 @@ export default {
       this.proceed = 0;
       this.ruleForm.name = " ";
       this.ruleForm.suffix = "";
+      this.ruleForm.remarkName = "";
       this.url = "";
       this.ifFileType = -1;
       this.fileDetail = "";
@@ -259,6 +260,7 @@ export default {
       let type;
       if (document.getElementById("file_xiugai").files[0]) {
         this.idUpBtn = false; //修改按钮状态
+        this.proceed = 0;
         type = document.getElementById("file_xiugai").files[0].name; //上传文件类型
         let link = getObjectURL(document.getElementById("file_xiugai").files[0]);
         this.url = link;
@@ -303,6 +305,8 @@ export default {
     handleDrop(e) {
       e.preventDefault();
       // console.log(e.dataTransfer.files);
+      this.idUpBtn = false;
+      this.proceed = 0;
       this.fileDetail = e.dataTransfer.files[0];
       let names = this.fileDetail.name.split(".");
       this.ruleForm.name = names[0]; //获取文件名称
@@ -348,6 +352,8 @@ export default {
     },
     //粘贴板上传图片 在监听事件里，判断是文本就粘贴文本，是图片就走上传方法
     pasting(event) {
+      this.idUpBtn = false; //启用上传
+      this.proceed = 0;
       let file = null; //要上传的文件
       const items = (event.clipboardData || window.clipboardData).items;
       // console.log(items);
