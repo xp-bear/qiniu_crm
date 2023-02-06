@@ -55,7 +55,7 @@
       </div>
     </div>
     <!-- 上传进度条 -->
-    <el-progress style="margin-top: 2px" :stroke-width="6" :text-inside="true" :show-text="false" :percentage="proceed"></el-progress>
+    <el-progress type="line" style="width: 880px; margin-top: 2px" :stroke-width="6" :text-inside="false" :show-text="true" :percentage="proceed"></el-progress>
     <!-- 上传文件信息区域 -->
     <div class="up_info">
       <div class="up-base">
@@ -121,7 +121,7 @@ export default {
       fileDetail: "", //文件信息
       qiniu_token: "", //七牛token信息
       proceed: 0, //上传进度
-      idUpBtn: false, //上传按钮状态
+      idUpBtn: false, //上传按钮状态 true禁止上传
       fileAddress: "", //图片的地理位置
     };
   },
@@ -164,7 +164,9 @@ export default {
               next(res) {
                 that.proceed = parseInt(res.total.percent.toFixed(0));
               },
-              error(err) {},
+              error(err) {
+                console.log(err);
+              },
               complete(res) {
                 let key = encodeURIComponent(res.key);
                 let base_url;
@@ -252,18 +254,27 @@ export default {
     },
     resetForm(formName) {
       // this.$refs[formName].resetFields();
-      this.proceed = 0;
-      this.ruleForm.name = " ";
-      this.ruleForm.suffix = "";
-      this.ruleForm.remarkName = "";
-      this.url = "";
-      this.ifFileType = -1;
-      this.fileDetail = "";
-      this.idUpBtn = false; //修改按钮状态
-      // this.$router.go(0);
+      // this.proceed = 0;
+      // this.ruleForm.name = " ";
+      // this.ruleForm.suffix = "";
+      // this.ruleForm.remarkName = "";
+      // this.url = "";
+      // this.ifFileType = -1;
+      // this.fileDetail = "";
+      // this.idUpBtn = false; //修改按钮状态
+      this.$router.go(0);
     },
     // 上传图片临时链接显示
     showPhoto() {
+      // 根据进度条判断是否应该上传文件。
+      if (this.proceed > 0 && this.proceed < 100) {
+        return this.$message({
+          message: "已经有文件在上传，请点击重置上传状态!",
+          type: "error",
+          duration: 2000,
+        });
+      }
+
       let type;
       if (document.getElementById("file_xiugai").files[0]) {
         this.idUpBtn = false; //修改按钮状态
@@ -286,35 +297,19 @@ export default {
 
       // 文件类型格式处理
       this.ifFileType = fileType(type);
-
-      // if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
-      //   this.ifFileType = 0;
-      // } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
-      //   this.ifFileType = 1;
-      // } else if (type.includes(".txt") || type.includes(".TXT")) {
-      //   this.ifFileType = 2;
-      // } else if (type.includes(".doc") || type.includes(".DOC") || type.includes(".docx") || type.includes(".DOCX")) {
-      //   this.ifFileType = 3;
-      // } else if (type.includes(".pdf") || type.includes(".PDF")) {
-      //   this.ifFileType = 4;
-      // } else if (type.includes(".ppt") || type.includes(".PPT") || type.includes(".pptx") || type.includes(".PPTX")) {
-      //   this.ifFileType = 5;
-      // } else if (type.includes(".xls") || type.includes(".xlsx") || type.includes(".XLS") || type.includes(".XLSX")) {
-      //   this.ifFileType = 6;
-      // } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
-      //   this.ifFileType = 7;
-      // } else if (type.includes(".mp3") || type.includes(".MP3")) {
-      //   this.ifFileType = 9;
-      // } else if (type.includes(".exe") || type.includes(".EXE")) {
-      //   this.ifFileType = 10;
-      // } else {
-      //   this.ifFileType = 8;
-      // }
     },
     // 拖拽事件
     handleDrop(e) {
       e.preventDefault();
-      // console.log(e.dataTransfer.files);
+      // 根据进度条判断是否应该上传文件。
+      if (this.proceed > 0 && this.proceed < 100) {
+        return this.$message({
+          message: "已经有文件在上传，请点击重置上传状态!",
+          type: "error",
+          duration: 2000,
+        });
+      }
+
       this.idUpBtn = false;
       this.proceed = 0;
       this.fileDetail = e.dataTransfer.files[0];
@@ -325,37 +320,14 @@ export default {
       // 文件类型格式处理
       this.ifFileType = fileType(type);
 
-      // let type = this.fileDetail.name.toLowerCase();
-      // if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
-      //   this.ifFileType = 0;
-      // } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".ts")) {
-      //   this.ifFileType = 1;
-      // } else if (type.includes(".txt")) {
-      //   this.ifFileType = 2;
-      // } else if (type.includes(".doc") || type.includes(".docx")) {
-      //   this.ifFileType = 3;
-      // } else if (type.includes(".pdf")) {
-      //   this.ifFileType = 4;
-      // } else if (type.includes(".ppt") || type.includes(".pptx")) {
-      //   this.ifFileType = 5;
-      // } else if (type.includes(".xls") || type.includes(".xlsx")) {
-      //   this.ifFileType = 6;
-      // } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip")) {
-      //   this.ifFileType = 7;
-      // } else if (type.includes(".mp3")) {
-      //   this.ifFileType = 9;
-      // } else if (type.includes(".exe")) {
-      //   this.ifFileType = 10;
-      // } else {
-      //   this.ifFileType = 8;
-      // }
       this.url = getObjectURL(this.fileDetail);
       // console.log(this.fileDetail);
     },
-    //回车事件
+    //销毁回车事件
     enterKeyupDestroyed() {
       document.removeEventListener("keyup", this.enterKey);
     },
+    // 监听回车事件
     enterKeyup() {
       document.addEventListener("keyup", this.enterKey);
     },
@@ -366,6 +338,15 @@ export default {
     },
     //粘贴板上传图片 在监听事件里，判断是文本就粘贴文本，是图片就走上传方法
     pasting(event) {
+      // 根据进度条判断是否应该上传文件。
+      if (this.proceed > 0 && this.proceed < 100) {
+        return this.$message({
+          message: "已经有文件在上传，请点击重置上传状态!",
+          type: "error",
+          duration: 2000,
+        });
+      }
+
       this.idUpBtn = false; //启用上传
       this.proceed = 0;
       let file = null; //要上传的文件
