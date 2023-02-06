@@ -69,7 +69,9 @@
         <div class="d-file">
           <!-- <el-tooltip class="item" effect="light" content="点击文件，进入全屏预览。" placement="top"> -->
           <img v-if="fileDetail.file_type == 0" style="width: 100%" :src="fileDetail.file_link" alt="" />
-          <video v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop :src="fileDetail.file_link"></video>
+          <video v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop>
+            <source :src="fileDetail.file_link" type="video/mp4" />
+          </video>
           <div v-else-if="fileDetail.file_type == 2">
             <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.16em" v-html="txtInfo"></div>
           </div>

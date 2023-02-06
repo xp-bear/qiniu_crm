@@ -20,7 +20,9 @@
         <input type="file" name="file" id="file" class="file" @change="showPhoto" />
       </div>
       <img v-if="ifFileType == 0" :src="url" alt="" style="height: 100%" />
-      <video v-else-if="ifFileType == 1" :src="url" muted autoplay loop style="height: 100%"></video>
+      <video v-else-if="ifFileType == 1" :src="url" muted autoplay loop style="height: 100%">
+        <source :src="url" type="video/mp4" />
+      </video>
       <div v-else-if="ifFileType == 2" style="display: flex; justify-content: center; align-items: center">
         <img src="@/assets/types/2.png" />
       </div>
@@ -283,7 +285,7 @@ export default {
 
       if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
         this.ifFileType = 0;
-      } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov")) {
+      } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
         this.ifFileType = 1;
       } else if (type.includes(".txt") || type.includes(".TXT")) {
         this.ifFileType = 2;
@@ -318,7 +320,7 @@ export default {
       let type = this.fileDetail.name;
       if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
         this.ifFileType = 0;
-      } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov")) {
+      } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
         this.ifFileType = 1;
       } else if (type.includes(".txt") || type.includes(".TXT")) {
         this.ifFileType = 2;
@@ -374,7 +376,7 @@ export default {
             let type = this.fileDetail.name;
             if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
               this.ifFileType = 0;
-            } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov")) {
+            } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
               this.ifFileType = 1;
             } else if (type.includes(".txt") || type.includes(".TXT")) {
               this.ifFileType = 2;
