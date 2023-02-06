@@ -14,7 +14,7 @@ const routes = [
   },
   // {
   //   path: "/",
-  //   redirect: "/list",
+  //   redirect: "/login",
   // },
   {
     path: "/login",
@@ -57,7 +57,7 @@ router.beforeEach((to, from, next) => {
   }
 
   if (!token) {
-    if (to.path === "/login" || to.path === "/") {
+    if (to.path === "/login") {
       next(); // 系统根路由
     } else {
       Vue.prototype.$mb.alert("您还没有登录，请先登录!", "熊仔图床提示您", {
