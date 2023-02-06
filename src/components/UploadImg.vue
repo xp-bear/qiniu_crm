@@ -99,7 +99,7 @@
 </template>
 <script>
 import { getObjectURL } from "@/utils/upload";
-import { getSize } from "@/utils/foramt";
+import { getSize, fileType } from "@/utils/foramt";
 import { getQiNiuTokenApi, insertFileApi } from "@/api/index";
 import * as qiniu from "qiniu-js";
 export default {
@@ -128,6 +128,7 @@ export default {
 
   methods: {
     getSize,
+    fileType,
     submitForm(formName) {
       if (this.idUpBtn == true) {
         return this.$message({
@@ -283,29 +284,32 @@ export default {
       this.ruleForm.name = names[0]; //获取文件名称
       this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
 
-      if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
-        this.ifFileType = 0;
-      } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
-        this.ifFileType = 1;
-      } else if (type.includes(".txt") || type.includes(".TXT")) {
-        this.ifFileType = 2;
-      } else if (type.includes(".doc") || type.includes(".DOC") || type.includes(".docx") || type.includes(".DOCX")) {
-        this.ifFileType = 3;
-      } else if (type.includes(".pdf") || type.includes(".PDF")) {
-        this.ifFileType = 4;
-      } else if (type.includes(".ppt") || type.includes(".PPT") || type.includes(".pptx") || type.includes(".PPTX")) {
-        this.ifFileType = 5;
-      } else if (type.includes(".xls") || type.includes(".xlsx") || type.includes(".XLS") || type.includes(".XLSX")) {
-        this.ifFileType = 6;
-      } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
-        this.ifFileType = 7;
-      } else if (type.includes(".mp3") || type.includes(".MP3")) {
-        this.ifFileType = 9;
-      } else if (type.includes(".exe") || type.includes(".EXE")) {
-        this.ifFileType = 10;
-      } else {
-        this.ifFileType = 8;
-      }
+      // 文件类型格式处理
+      this.ifFileType = fileType(type);
+
+      // if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
+      //   this.ifFileType = 0;
+      // } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
+      //   this.ifFileType = 1;
+      // } else if (type.includes(".txt") || type.includes(".TXT")) {
+      //   this.ifFileType = 2;
+      // } else if (type.includes(".doc") || type.includes(".DOC") || type.includes(".docx") || type.includes(".DOCX")) {
+      //   this.ifFileType = 3;
+      // } else if (type.includes(".pdf") || type.includes(".PDF")) {
+      //   this.ifFileType = 4;
+      // } else if (type.includes(".ppt") || type.includes(".PPT") || type.includes(".pptx") || type.includes(".PPTX")) {
+      //   this.ifFileType = 5;
+      // } else if (type.includes(".xls") || type.includes(".xlsx") || type.includes(".XLS") || type.includes(".XLSX")) {
+      //   this.ifFileType = 6;
+      // } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
+      //   this.ifFileType = 7;
+      // } else if (type.includes(".mp3") || type.includes(".MP3")) {
+      //   this.ifFileType = 9;
+      // } else if (type.includes(".exe") || type.includes(".EXE")) {
+      //   this.ifFileType = 10;
+      // } else {
+      //   this.ifFileType = 8;
+      // }
     },
     // 拖拽事件
     handleDrop(e) {
@@ -318,29 +322,33 @@ export default {
       this.ruleForm.name = names[0]; //获取文件名称
       this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
       let type = this.fileDetail.name;
-      if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
-        this.ifFileType = 0;
-      } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
-        this.ifFileType = 1;
-      } else if (type.includes(".txt") || type.includes(".TXT")) {
-        this.ifFileType = 2;
-      } else if (type.includes(".doc") || type.includes(".DOC") || type.includes(".docx") || type.includes(".DOCX")) {
-        this.ifFileType = 3;
-      } else if (type.includes(".pdf") || type.includes(".PDF")) {
-        this.ifFileType = 4;
-      } else if (type.includes(".ppt") || type.includes(".PPT") || type.includes(".pptx") || type.includes(".PPTX")) {
-        this.ifFileType = 5;
-      } else if (type.includes(".xls") || type.includes(".xlsx") || type.includes(".XLS") || type.includes(".XLSX")) {
-        this.ifFileType = 6;
-      } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
-        this.ifFileType = 7;
-      } else if (type.includes(".mp3") || type.includes(".MP3")) {
-        this.ifFileType = 9;
-      } else if (type.includes(".exe") || type.includes(".EXE")) {
-        this.ifFileType = 10;
-      } else {
-        this.ifFileType = 8;
-      }
+      // 文件类型格式处理
+      this.ifFileType = fileType(type);
+
+      // let type = this.fileDetail.name.toLowerCase();
+      // if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
+      //   this.ifFileType = 0;
+      // } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".ts")) {
+      //   this.ifFileType = 1;
+      // } else if (type.includes(".txt")) {
+      //   this.ifFileType = 2;
+      // } else if (type.includes(".doc") || type.includes(".docx")) {
+      //   this.ifFileType = 3;
+      // } else if (type.includes(".pdf")) {
+      //   this.ifFileType = 4;
+      // } else if (type.includes(".ppt") || type.includes(".pptx")) {
+      //   this.ifFileType = 5;
+      // } else if (type.includes(".xls") || type.includes(".xlsx")) {
+      //   this.ifFileType = 6;
+      // } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip")) {
+      //   this.ifFileType = 7;
+      // } else if (type.includes(".mp3")) {
+      //   this.ifFileType = 9;
+      // } else if (type.includes(".exe")) {
+      //   this.ifFileType = 10;
+      // } else {
+      //   this.ifFileType = 8;
+      // }
       this.url = getObjectURL(this.fileDetail);
       // console.log(this.fileDetail);
     },
@@ -374,29 +382,32 @@ export default {
             this.ruleForm.name = names[0]; //获取文件名称
             this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
             let type = this.fileDetail.name;
-            if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
-              this.ifFileType = 0;
-            } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
-              this.ifFileType = 1;
-            } else if (type.includes(".txt") || type.includes(".TXT")) {
-              this.ifFileType = 2;
-            } else if (type.includes(".doc") || type.includes(".DOC") || type.includes(".docx") || type.includes(".DOCX")) {
-              this.ifFileType = 3;
-            } else if (type.includes(".pdf") || type.includes(".PDF")) {
-              this.ifFileType = 4;
-            } else if (type.includes(".ppt") || type.includes(".PPT") || type.includes(".pptx") || type.includes(".PPTX")) {
-              this.ifFileType = 5;
-            } else if (type.includes(".xls") || type.includes(".xlsx") || type.includes(".XLS") || type.includes(".XLSX")) {
-              this.ifFileType = 6;
-            } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
-              this.ifFileType = 7;
-            } else if (type.includes(".mp3") || type.includes(".MP3")) {
-              this.ifFileType = 9;
-            } else if (type.includes(".exe") || type.includes(".EXE")) {
-              this.ifFileType = 10;
-            } else {
-              this.ifFileType = 8;
-            }
+
+            // 文件类型格式处理
+            this.ifFileType = fileType(type);
+            // if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
+            //   this.ifFileType = 0;
+            // } else if (type.includes(".mp4") || type.includes(".MP4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
+            //   this.ifFileType = 1;
+            // } else if (type.includes(".txt") || type.includes(".TXT")) {
+            //   this.ifFileType = 2;
+            // } else if (type.includes(".doc") || type.includes(".DOC") || type.includes(".docx") || type.includes(".DOCX")) {
+            //   this.ifFileType = 3;
+            // } else if (type.includes(".pdf") || type.includes(".PDF")) {
+            //   this.ifFileType = 4;
+            // } else if (type.includes(".ppt") || type.includes(".PPT") || type.includes(".pptx") || type.includes(".PPTX")) {
+            //   this.ifFileType = 5;
+            // } else if (type.includes(".xls") || type.includes(".xlsx") || type.includes(".XLS") || type.includes(".XLSX")) {
+            //   this.ifFileType = 6;
+            // } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
+            //   this.ifFileType = 7;
+            // } else if (type.includes(".mp3") || type.includes(".MP3")) {
+            //   this.ifFileType = 9;
+            // } else if (type.includes(".exe") || type.includes(".EXE")) {
+            //   this.ifFileType = 10;
+            // } else {
+            //   this.ifFileType = 8;
+            // }
             this.url = getObjectURL(this.fileDetail);
             break;
           }
