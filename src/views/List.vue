@@ -63,7 +63,7 @@
     </div>
 
     <!-- 对话框 -->
-    <el-dialog style="padding: 0" top="1vh" :visible.sync="dialogVisible" width="80%" @closed="closeDialog" :destroy-on-close="true">
+    <el-dialog style="padding: 0" top="1vh" :visible.sync="dialogVisible" width="80%" @close="closeDialog" :destroy-on-close="true">
       <span slot="title" class="Gradual">文件预览</span>
       <div class="dialog">
         <div class="d-file">

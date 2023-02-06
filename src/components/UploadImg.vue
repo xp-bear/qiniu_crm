@@ -142,7 +142,7 @@ export default {
             // 获取token
             let params = {
               space: this.ruleForm.region,
-              name: this.ruleForm.name + this.ruleForm.suffix,
+              name: this.ruleForm.name + "-" + Date.now() + this.ruleForm.suffix,
             };
             let res = await getQiNiuTokenApi(params);
             this.qiniu_token = res.uploadToken;
@@ -156,7 +156,7 @@ export default {
               useCdnDomain: true,
               region: qiniu.region.z2,
             };
-            let observable = qiniu.upload(this.fileDetail, this.ruleForm.name + this.ruleForm.suffix, this.qiniu_token, putExtra, config);
+            let observable = qiniu.upload(this.fileDetail, params.name, this.qiniu_token, putExtra, config);
             let observer = {
               next(res) {
                 that.proceed = parseInt(res.total.percent.toFixed(0));
@@ -174,6 +174,9 @@ export default {
                 that.url = base_url + key + "?" + Date.now();
                 // console.log("上传成功: ", that.url);
                 // console.log(that.fileAddress);
+                let file_name = params.name.split(".");
+                file_name.pop();
+                file_name = file_name.join(".");
                 if (that.fileAddress) {
                   // 在数据库添加一条数据
                   let datas = {
@@ -181,7 +184,7 @@ export default {
                     file_type: that.ifFileType,
                     file_link: that.url,
                     file_suffix: that.ruleForm.suffix,
-                    file_name: that.ruleForm.name + "-" + Date.now(),
+                    file_name: file_name,
                     file_size: that.fileDetail.size,
                     file_region: that.ruleForm.region,
                     file_user_id: that.$store.state.userObjStore.id || 0,
@@ -190,6 +193,7 @@ export default {
                     file_address: that.fileAddress,
                     file_view: 1,
                   };
+
                   insertFileApi(datas).then((result) => {}); //在数据库新增一条数据
                   // 禁用上传按钮
                   that.idUpBtn = true; //确认禁用按钮
