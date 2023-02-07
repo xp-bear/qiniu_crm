@@ -40,7 +40,7 @@
 <script>
 import { getObjectURL } from "@/utils/upload";
 import { dateOne } from "@/utils/time_format";
-import { getQiNiuTokenApi, updateUserInfoApi } from "@/api/index";
+import { getQiNiuTokenApi, updateUserInfoApi, fileEditNameApi } from "@/api/index";
 import * as qiniu from "qiniu-js";
 export default {
   name: "editUser",
@@ -82,11 +82,16 @@ export default {
             user.username = this.nickname;
             user.sign = this.sign;
             localStorage.setItem("user", JSON.stringify(user));
+
+            // 修改完之后 ,还要修改文件表的file_user_name
+            await fileEditNameApi({ file_user_name: this.nickname, file_user_id: this.$store.state.userObjStore.id });
+
             this.$message({
               message: "用户信息修改成功",
               type: "success",
               duration: 1000,
             });
+
             setTimeout(() => {
               this.$emit("changeComponent", "UserBanner");
             }, 1000);

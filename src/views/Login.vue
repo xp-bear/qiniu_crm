@@ -355,7 +355,6 @@ export default {
   .login-container {
     width: 1280px;
     height: 618px;
-    // background-color: pink;
     position: relative;
     .login {
       position: absolute;

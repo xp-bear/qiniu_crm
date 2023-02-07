@@ -28,3 +28,5 @@ export const updateScreenNumberApi = (data) => service.post("/updatescreennumber
 export const insertBananaApi = (data) => service.post("/insertbanana", data);
 // 10.修改用户信息接口
 export const updateUserInfoApi = (data) => service.post("/updateuserinfo", data);
+// 11.修改文件表的文件所属者
+export const fileEditNameApi = (data) => service.post("/fileeditname", data);

@@ -141,6 +141,9 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           if (this.url) {
+            // 禁用上传按钮
+            this.idUpBtn = true; //确认禁用按钮
+
             let that = this; //拿到外面的this
             // 获取token
             let params = {
@@ -177,8 +180,8 @@ export default {
                 }
 
                 that.url = base_url + key + "?" + Date.now();
-                console.log("上传成功: ", that.url);
-                // console.log(that.fileAddress);
+                // console.log("上传成功: ", that.url);
+
                 let file_name = params.name.split(".");
                 file_name.pop();
                 file_name = file_name.join(".");
@@ -198,39 +201,39 @@ export default {
                     file_address: that.fileAddress,
                     file_view: 1,
                   };
-                  console.log(datas);
-                  insertFileApi(datas).then((result) => {}); //在数据库新增一条数据
-                  // 禁用上传按钮
-                  that.idUpBtn = true; //确认禁用按钮
-
-                  if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(that.url).then(() => {
-                      that.$message({
-                        message: "上传文件地址已复制到粘贴板!",
-                        type: "success",
-                        duration: 3000,
-                      });
+                  insertFileApi(datas).then((result) => {
+                    // 在这里数据上传完了,把按钮状态启用
+                    that.idUpBtn = false;
+                  }); //在数据库新增一条数据
+                }
+                
+                // 获取复制文件资源地址 , 获取粘贴板的内容
+                if (navigator.clipboard && window.isSecureContext) {
+                  navigator.clipboard.writeText(that.url);
+                  that.$message({
+                    message: "上传资源地址已复制到粘贴板!",
+                    type: "success",
+                    duration: 3000,
+                  });
+                } else {
+                  // 创建text area
+                  const textArea = document.createElement("textarea");
+                  textArea.value = that.url;
+                  // 使text area不在viewport，同时设置不可见
+                  document.body.appendChild(textArea);
+                  textArea.focus();
+                  textArea.select();
+                  return new Promise((resolve, reject) => {
+                    // 执行复制命令并移除文本框
+                    document.execCommand("copy") ? resolve() : reject(new Error("出错了"));
+                    textArea.remove();
+                  }).then(() => {
+                    that.$message({
+                      message: "上传资源地址已复制到粘贴板!",
+                      type: "success",
+                      duration: 3000,
                     });
-                  } else {
-                    // 创建text area
-                    const textArea = document.createElement("textarea");
-                    textArea.value = that.url;
-                    // 使text area不在viewport，同时设置不可见
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    return new Promise((resolve, reject) => {
-                      // 执行复制命令并移除文本框
-                      document.execCommand("copy") ? resolve() : reject(new Error("出错了"));
-                      textArea.remove();
-                    }).then(() => {
-                      that.$message({
-                        message: "上传文件地址已复制到粘贴板!",
-                        type: "success",
-                        duration: 3000,
-                      });
-                    });
-                  }
+                  });
                 }
               },
             };

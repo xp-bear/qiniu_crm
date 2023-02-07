@@ -283,20 +283,15 @@ export default {
         // 监听音频播放时间
         if (this.$refs.audio) {
           this.$refs.audio.ontimeupdate = () => {
-            let currentTime = parseInt(this.$refs.audio.currentTime.toFixed(0));
-            let duration = parseInt(this.$refs.audio.duration.toFixed(0));
+            let currentTime = parseInt(this.$refs.audio?.currentTime.toFixed(0));
+            let duration = parseInt(this.$refs.audio?.duration.toFixed(0));
             let currentTimeremainder = currentTime % 60;
             currentTimeremainder = currentTimeremainder < 10 ? "0" + currentTimeremainder : currentTimeremainder;
             // 进度条进度
-            // let percentage = parseFloat(((currentTime / duration) * 100).toFixed(2));
-            // this.processMusic = percentage;
-            // this.processMusic = percentage;
             this.currentMusicTime = Math.floor(currentTime / 60) + ":" + currentTimeremainder;
             this.totalMusicTime = Math.floor(duration / 60) + ":" + (duration % 60);
             this.currentTime = currentTime;
             this.totalTime = duration;
-            // console.log(percentage);
-            // console.log(`currentTime: ${Math.floor(currentTime / 60) + ":" + currentTimeremainder} , duration: ${Math.floor(duration / 60) + ":" + (duration % 60)}`);
             // 做判断,播放结束
             if (this.currentTime >= this.totalTime) {
               this.isPlaying = false;
@@ -405,7 +400,6 @@ export default {
           let data = { file_name: this.fileDetail.file_name + this.fileDetail.file_suffix, space: this.fileDetail.file_region };
           // 删除云端七牛云图片
           getQiNiuDeleteFileApi(data).then((res) => {
-            // console.log(res);
             // 删除数据库对应的数据
             deleteFileApi({ file_id: this.fileDetail.file_id }).then((res) => {
               // console.log(res);
@@ -424,37 +418,22 @@ export default {
             message: "已取消删除",
           });
         });
-
-      /*   this.$confirm("此操作将永久删除该文件, 是否继续?", "熊仔图床提示您", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(() => {
-          // 进行七牛文件删除
-          let data = { file_name: this.fileDetail.file_name + file_suffix, space: this.fileDetail.file_region };
-          console.log(data);
-          // getQiNiuDeleteFileApi(data).then((res) => {
-          //   console.log(res);
-          // });
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });*/
     },
     // 下载文件
     downloadFile() {
       // 节流的使用
       if (this.clicktag == 0) {
+        this.$message({
+          type: "success",
+          message: "已经开始下载该资源啦！",
+          duration: 2000,
+        });
         this.clicktag = 1;
-        this.downRow(this.fileDetail.file_link, this.fileDetail.file_name, this.fileDetail.file_suffix);
+        // 处理文件名
+        let name = this.fileDetail.file_name.split("-");
+        name.pop();
+        name = name.join("-");
+        this.downRow(this.fileDetail.file_link, name, this.fileDetail.file_suffix);
         setTimeout(() => {
           this.clicktag = 0;
         }, 3000);
@@ -471,35 +450,7 @@ export default {
 
       // 修改logo图片
       this.isLogoState = false;
-
-      // if (!this.userObj) {
-      //   findAllFileApi().then((res) => {
-      //     this.filesArray = res.message;
-      //   });
-      // } else {
-      // this.$confirm("是否退出登录状态，进入数据星球", "熊仔图床提示您", {
-      //   confirmButtonText: "确认退出",
-      //   cancelButtonText: "取消",
-      //   type: "warning",
-      //   customClass: "exitLogin",
-      // })
-      //   .then(() => {
-      //     localStorage.clear();
-      //     this.userObj = "";
-      //     findAllFileApi().then((res) => {
-      //       this.filesArray = res.message;
-      //     });
-      //   })
-      //   .catch(() => {
-      //     // this.$message({
-      //     //   message: "用户已经取消!",
-      //     //   type: "info",
-      //     //   duration: 2000,
-      //     // });
-      //   });
-      // }
     },
-    //
     // 修改播放与暂停状态
     changeClass() {
       this.isPlaying = !this.isPlaying;
