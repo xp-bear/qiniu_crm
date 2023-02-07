@@ -177,7 +177,7 @@ export default {
                 }
 
                 that.url = base_url + key + "?" + Date.now();
-                // console.log("上传成功: ", that.url);
+                console.log("上传成功: ", that.url);
                 // console.log(that.fileAddress);
                 let file_name = params.name.split(".");
                 file_name.pop();
@@ -198,7 +198,7 @@ export default {
                     file_address: that.fileAddress,
                     file_view: 1,
                   };
-
+                  console.log(datas);
                   insertFileApi(datas).then((result) => {}); //在数据库新增一条数据
                   // 禁用上传按钮
                   that.idUpBtn = true; //确认禁用按钮
@@ -366,29 +366,7 @@ export default {
 
             // 文件类型格式处理
             this.ifFileType = fileType(type);
-            // if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
-            //   this.ifFileType = 0;
-            // } else if (type.includes(".mp4") || type.includes(".MP4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".MOV")) {
-            //   this.ifFileType = 1;
-            // } else if (type.includes(".txt") || type.includes(".TXT")) {
-            //   this.ifFileType = 2;
-            // } else if (type.includes(".doc") || type.includes(".DOC") || type.includes(".docx") || type.includes(".DOCX")) {
-            //   this.ifFileType = 3;
-            // } else if (type.includes(".pdf") || type.includes(".PDF")) {
-            //   this.ifFileType = 4;
-            // } else if (type.includes(".ppt") || type.includes(".PPT") || type.includes(".pptx") || type.includes(".PPTX")) {
-            //   this.ifFileType = 5;
-            // } else if (type.includes(".xls") || type.includes(".xlsx") || type.includes(".XLS") || type.includes(".XLSX")) {
-            //   this.ifFileType = 6;
-            // } else if (type.includes(".rar") || type.includes(".7z") || type.includes(".zip") || type.includes(".RAR") || type.includes(".ZIP")) {
-            //   this.ifFileType = 7;
-            // } else if (type.includes(".mp3") || type.includes(".MP3")) {
-            //   this.ifFileType = 9;
-            // } else if (type.includes(".exe") || type.includes(".EXE")) {
-            //   this.ifFileType = 10;
-            // } else {
-            //   this.ifFileType = 8;
-            // }
+
             this.url = getObjectURL(this.fileDetail);
             break;
           }
@@ -404,13 +382,22 @@ export default {
         let gc = new BMap.Geocoder();
         let pointAdd = new BMap.Point(res.center.lng, res.center.lat);
         gc.getLocation(pointAdd, (rs) => {
+          // console.log(rs);
           // 百度地图解析城市名
-          this.fileAddress = rs.address;
+          this.fileAddress = rs.addressComponents.province + "、" + rs.addressComponents.city + "、" + rs.addressComponents.district;
         });
       });
     },
   },
   mounted() {
+    // 加载所有用户信息
+    // 判断用户有没有登录。
+    let userObj = JSON.parse(localStorage.getItem("user"));
+    if (userObj) {
+      // 保存用户信息到vuex中
+      this.$store.commit("getUser", userObj);
+    }
+
     let drag = this.$refs.drag;
     drag.addEventListener("drop", this.handleDrop);
     drag.addEventListener("dragleave", (e) => {

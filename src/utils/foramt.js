@@ -31,7 +31,7 @@ export function fileType(type) {
   type = type.toLowerCase();
   if (type.includes(".jpg") || type.includes(".png") || type.includes(".jpeg") || type.includes(".webp") || type.includes(".ico") || type.includes(".gif")) {
     counter = 0;
-  } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".wmv") || type.includes(".mov") || type.includes(".ts")) {
+  } else if (type.includes(".mp4") || type.includes(".avi") || type.includes(".mov")) {
     counter = 1;
   } else if (type.includes(".txt")) {
     counter = 2;

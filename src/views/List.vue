@@ -191,6 +191,7 @@ import { findFileApi, getQiNiuDeleteFileApi, deleteFileApi, updateScreenNumberAp
 import { getSize } from "@/utils/foramt";
 import { downRow } from "@/utils/upload";
 import { dateOne } from "@/utils/time_format";
+
 export default {
   name: "List",
   data() {
@@ -251,6 +252,7 @@ export default {
     dateOne,
     downRow,
     getSize,
+
     // 跳转页面到用户
     toUserInfo() {
       this.$router.push({
