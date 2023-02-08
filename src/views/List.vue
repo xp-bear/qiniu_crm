@@ -58,7 +58,7 @@
         <!-- 角标 -->
         <div class="tag"><img :src="require(`../assets/types/${item.file_type}.png`)" alt="" /></div>
         <!-- 文件信息 -->
-        <div class="file-name eclipse">{{ item.file_name.split("-")[0] + item.file_suffix }}</div>
+        <div class="file-name eclipse">{{ getListName(item.file_name, item.file_suffix) }}</div>
       </div>
     </div>
 
@@ -259,7 +259,13 @@ export default {
     dateOne,
     downRow,
     getSize,
-
+    // list 文件名展示
+    getListName(names, suffix) {
+      names = names.split("-");
+      names.pop();
+      names = names.join(" ");
+      return names + suffix;
+    },
     // 跳转页面到用户
     toUserInfo() {
       this.$router.push({
@@ -622,11 +628,11 @@ export default {
       display: flex;
       flex-direction: column;
       .file-name {
+        width: 100%;
+        height: 20px;
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 100%;
-        height: 20px;
         font-size: 14px;
         font-family: xp;
       }
