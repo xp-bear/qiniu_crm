@@ -31,10 +31,10 @@
         <div @click="openTxt(index)" v-else-if="item.file_type == 2" style="display: flex; justify-content: center">
           <img style="width: 88px; height: 88px" src="../assets/types/2.png" alt="" />
         </div>
-        <div v-else-if="item.file_type == 3" style="display: flex; justify-content: center">
+        <div @click="openDocx(index)" v-else-if="item.file_type == 3" style="display: flex; justify-content: center">
           <img style="width: 88px; height: 88px" src="../assets/types/3.png" alt="" />
         </div>
-        <div v-else-if="item.file_type == 4" style="display: flex; justify-content: center">
+        <div @click="openPdf(index)" v-else-if="item.file_type == 4" style="display: flex; justify-content: center">
           <img style="width: 88px; height: 88px" src="../assets/types/4.png" alt="" />
         </div>
         <div v-else-if="item.file_type == 5" style="display: flex; justify-content: center">
@@ -76,16 +76,20 @@
             <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.16em" v-html="txtInfo"></div>
           </div>
           <div v-else-if="fileDetail.file_type == 3" style="height: 100%; display: flex; justify-content: center; align-items: center">
-            <img style="width: 128px; height: 128px" src="../assets/types/3.png" alt="" />
+            <!-- <img style="width: 128px; height: 128px" src="../assets/types/3.png" alt="" /> -->
+            <div ref="file" style="width: 100%; height: 100%"></div>
           </div>
           <div v-else-if="fileDetail.file_type == 4" style="height: 100%; display: flex; justify-content: center; align-items: center">
-            <img style="width: 128px; height: 128px" src="../assets/types/4.png" alt="" />
+            <!-- <img style="width: 128px; height: 128px" src="../assets/types/4.png" alt="" /> -->
+            <div id="mypdf" style="width: 100%; height: 100%"></div>
           </div>
           <div v-else-if="fileDetail.file_type == 5" style="height: 100%; display: flex; justify-content: center; align-items: center">
             <img style="width: 128px; height: 128px" src="../assets/types/5.png" alt="" />
           </div>
           <div v-else-if="fileDetail.file_type == 6" style="height: 100%; display: flex; justify-content: center; align-items: center">
-            <img style="width: 128px; height: 128px" src="../assets/types/6.png" alt="" />
+            <!-- <img style="width: 128px; height: 128px" src="../assets/types/6.png" alt="" /> -->
+            <!-- https://docs.google.com/viewer?url=http://cdn.xxoutman.cn/tt-1675865071390.xlsx?1675865071597 -->
+            <iframe style="width: 100%; height: 100%" :src="`https://view.officeapps.live.com/op/view.aspx?src=${fileDetail.file_link}`" frameborder="0"></iframe>
           </div>
           <div v-else-if="fileDetail.file_type == 7" style="height: 100%; display: flex; justify-content: center; align-items: center">
             <img style="width: 128px; height: 128px" src="../assets/types/7.png" alt="" />
@@ -191,6 +195,9 @@ import { findFileApi, getQiNiuDeleteFileApi, deleteFileApi, updateScreenNumberAp
 import { getSize } from "@/utils/foramt";
 import { downRow } from "@/utils/upload";
 import { dateOne } from "@/utils/time_format";
+import PDFObject from "pdfobject";
+import service from "@/utils/axios";
+import { renderAsync } from "docx-preview";
 
 export default {
   name: "List",
@@ -389,6 +396,30 @@ export default {
       };
       xhr.send();
     },
+    // 预览pdf文件
+    openPdf(index) {
+      setTimeout(() => {
+        let file_url = this.filesArray[index].file_link;
+        PDFObject.embed(file_url, "#mypdf");
+      }, 500);
+    },
+    // 预览docx文件
+    openDocx(index) {
+      let file_url = this.filesArray[index].file_link;
+      setTimeout(() => {
+        service({
+          method: "post",
+          responseType: "blob",
+          //请求头自己写
+          headers: {},
+          // 文件路径
+          url: file_url,
+        }).then((data) => {
+          renderAsync(data, this.$refs.file, null);
+        });
+      }, 500);
+    },
+
     //删除文件
     deleteFile() {
       this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
@@ -503,6 +534,10 @@ export default {
   }
   width: 1200px;
   margin: 0 auto;
+  .pdfobject-container {
+    height: 680px;
+    border: 1rem solid rgba(0, 0, 0, 0.1);
+  }
   .top {
     width: 100%;
     height: 80px;
