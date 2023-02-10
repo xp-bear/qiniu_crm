@@ -21,13 +21,27 @@
         </div>
       </div>
     </div>
+    <!-- 数据搜索栏 -->
+    <!-- <div class="file-search">
+      <el-select v-model="region" placeholder="文件类型" style="width: 150px">
+        <el-option label="图片" value="shanghai"></el-option>
+        <el-option label="区域二" value="beijing"></el-option>
+      </el-select>
+      <el-input placeholder="文件名称" v-model="input" clearable> </el-input>
+      <el-input placeholder="文件备注信息" v-model="input" clearable> </el-input>
+      <el-date-picker @change="selectTime" value-format="yyyy-M-d" v-model="time_range" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
+      <el-button type="primary">查询</el-button>
+      <el-button type="warning">重置</el-button>
+    </div> -->
+
     <!-- 搜索栏数据查询 -->
     <el-empty v-if="filesArray.length <= 0" description="暂无数据，快去上传数据吧！"></el-empty>
     <!-- 数据展示页面 -->
+    <!--  :style="`background-color:rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`" -->
     <div class="datas">
-      <div class="card" @click="openMark(index)" v-for="(item, index) in filesArray" :key="item.file_id">
-        <img v-if="item.file_type == 0" :src="item.file_link" alt="" style="height: 90px" />
-        <video v-else-if="item.file_type == 1" :src="item.file_link" style="height: 90px"></video>
+      <div class="card" :style="`background:${cardColor[item.file_type]}`" @click="openMark(index)" v-for="(item, index) in filesArray" :key="item.file_id">
+        <div v-if="item.file_type == 0" :style="`background: url('${item.file_link}') top center; height:88px; background-size:cover;`"></div>
+        <video v-else-if="item.file_type == 1" :src="item.file_link" style="height: 88px"></video>
         <div @click="openTxt(index)" v-else-if="item.file_type == 2" style="display: flex; justify-content: center">
           <img style="width: 88px; height: 88px" src="../assets/types/2.png" alt="" />
         </div>
@@ -66,7 +80,7 @@
     <el-dialog style="padding: 0" top="1vh" :visible.sync="dialogVisible" width="80%" @close="closeDialog" :destroy-on-close="true">
       <span slot="title" class="Gradual">文件预览</span>
       <div class="dialog">
-        <div class="d-file">
+        <div class="d-file slider" style="position: relative">
           <!-- <el-tooltip class="item" effect="light" content="点击文件，进入全屏预览。" placement="top"> -->
           <img v-if="fileDetail.file_type == 0" style="width: 100%" :src="fileDetail.file_link" alt="" />
           <video v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop>
@@ -97,8 +111,19 @@
           <div v-else-if="fileDetail.file_type == 8" style="height: 100%; display: flex; justify-content: center; align-items: center">
             <img style="width: 128px; height: 128px" src="../assets/types/8.png" alt="" />
           </div>
-          <div v-else-if="fileDetail.file_type == 9" style="width: 100%; height: 100%; display: flex; justify-content: center; align-items: center">
+          <div
+            v-else-if="fileDetail.file_type == 9"
+            style="
+              width: 100%;
+              height: 100%;
+              background: url('http://cdn.xxoutman.cn/tuchuang_music-1675916098865.jpg?1675916099175') no-repeat center;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+          >
             <!--  background: linear-gradient(-65deg, #43c6ac, #f8ffae); -->
+            <!--  background: url(http://cdn.xxoutman.cn/tuchuang_music-1675916098865.jpg?1675916099175); -->
             <!-- <img style="width: 128px; height: 128px" src="../assets/types/8.png" alt="" /> -->
             <!-- <audio :src="fileDetail.file_link" autoplay controls></audio> -->
             <div class="audio green-audio-player">
@@ -143,6 +168,11 @@
             <img style="width: 128px; height: 128px" src="../assets/types/10.png" alt="" />
           </div>
           <!-- </el-tooltip> -->
+          <!-- 下载进度条展示 -->
+          <div style="display: flex; width: 100%; position: absolute; bottom: 0">
+            <span>下载进度:&nbsp;</span>
+            <el-progress style="width: 92%" :percentage="download_process"></el-progress>
+          </div>
         </div>
 
         <div class="d-info">
@@ -198,11 +228,13 @@ import { dateOne } from "@/utils/time_format";
 import PDFObject from "pdfobject";
 import service from "@/utils/axios";
 import { renderAsync } from "docx-preview";
+import { cardColor } from "@/utils/config";
 
 export default {
   name: "List",
   data() {
     return {
+      cardColor, //每一个列表的背景色。
       dialogVisible: false, //文件展示弹出层
       userObj: "", //用户信息
       filesArray: [], //该用户的所有文件信息
@@ -217,6 +249,8 @@ export default {
       currentTime: 0, //播放时间
       totalTime: 0,
       isLogoState: true, //切换logo图片
+      time_range: "", //上传时间范围
+      download_process: 0, //下载文件进度
     };
   },
   watch: {
@@ -259,6 +293,62 @@ export default {
     dateOne,
     downRow,
     getSize,
+    // 下载文件三部曲
+    async downloadFileProcess(fileUrl, fileName) {
+      let blob = await this.getBlob(fileUrl);
+      this.saveFile(blob, fileName);
+    },
+    getBlob(fileUrl) {
+      let that = this;
+      return new Promise((resolve) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", fileUrl, true);
+        //监听进度事件
+        xhr.addEventListener(
+          "progress",
+          function (evt) {
+            if (evt.lengthComputable) {
+              let percentComplete = evt.loaded / evt.total;
+              // percentage是当前下载进度，可根据自己的需求自行处理
+              let percentage = percentComplete * 100;
+              // console.log(percentage);
+              that.download_process = parseFloat(percentage.toFixed(2));
+            }
+          },
+          false
+        );
+        xhr.responseType = "blob";
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          }
+        };
+        xhr.send();
+      });
+    },
+    saveFile(blob, fileName) {
+      // ie的下载
+      if (window.navigator.msSaveOrOpenBlob) {
+        navigator.msSaveBlob(blob, filename);
+      } else {
+        // 非ie的下载
+        const link = document.createElement("a");
+        link.classList.add("download_link");
+        const body = document.querySelector("body");
+
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileName;
+
+        // fix Firefox
+        link.style.display = "none";
+        body.appendChild(link);
+
+        link.click();
+        body.removeChild(link);
+
+        window.URL.revokeObjectURL(link.href);
+      }
+    },
     // list 文件名展示
     getListName(names, suffix) {
       names = names.split("-");
@@ -340,7 +430,7 @@ export default {
       if (document.execCommand("copy")) {
         document.execCommand("copy");
         this.$message({
-          message: "链接已复制到粘贴板!",
+          message: "内容已复制到粘贴板!",
           type: "success",
           duration: 2000,
         });
@@ -366,12 +456,22 @@ export default {
     },
     //关闭的回调函数
     closeDialog() {
+      // console.log(22);
+      // 取消下载文件事件监听
+      // const xhr = new XMLHttpRequest();
+      // xhr.abort();
+      // xhr.removeEventListener("progress", () => {
+      //   this.getBlob();
+      //   console.log(11);
+      // });
+
       this.fileDetail = ""; //清空对话框里面的数据
       this.isPlaying = false;
       this.currentTime = 0;
       this.totalTime = 0;
       this.totalMusicTime = "0:00";
       this.currentMusicTime = "0:00";
+      this.download_process = 0; //下载文件进度条
     },
     // 预览txt文本
     openTxt(index) {
@@ -458,25 +558,45 @@ export default {
     },
     // 下载文件
     downloadFile() {
-      // 节流的使用
-      if (this.clicktag == 0) {
-        this.$message({
-          type: "success",
-          message: "已经开始下载该资源啦！",
-          duration: 2000,
+      // 根据下载文件进度条,做判断
+      if (this.download_process > 0 && this.download_process < 100) {
+        return this.$message({
+          message: "该文件已经在下载中!",
+          type: "error",
+          duration: 1000,
         });
-        this.clicktag = 1;
-        // 处理文件名
-        let name = this.fileDetail.file_name.split("-");
-        name.pop();
-        name = name.join("-");
-        this.downRow(this.fileDetail.file_link, name, this.fileDetail.file_suffix);
-        setTimeout(() => {
-          this.clicktag = 0;
-        }, 3000);
-      } else {
-        this.$mb.alert("当前资源正在下载中,请勿重复点击!", "熊仔图床提示您", { confirmButtonText: "确定", type: "warning" });
+      } else if (this.download_process == 100) {
+        return this.$message({
+          message: "文件已经下载完成!",
+          type: "success",
+          duration: 1000,
+        });
       }
+
+      let name = this.fileDetail.file_name.split("-");
+      name.pop();
+      name = name.join("-");
+      this.downloadFileProcess(this.fileDetail.file_link, name, this.fileDetail.file_suffix);
+
+      // 节流的使用
+      // if (this.clicktag == 0) {
+      //   this.$message({
+      //     type: "success",
+      //     message: "已经开始下载该资源啦！",
+      //     duration: 2000,
+      //   });
+      //   this.clicktag = 1;
+      //   // 处理文件名
+      //   let name = this.fileDetail.file_name.split("-");
+      //   name.pop();
+      //   name = name.join("-");
+      //   this.downRow(this.fileDetail.file_link, name, this.fileDetail.file_suffix);
+      //   setTimeout(() => {
+      //     this.clicktag = 0;
+      //   }, 3000);
+      // } else {
+      //   this.$mb.alert("当前资源正在下载中,请勿重复点击!", "熊仔图床提示您", { confirmButtonText: "确定", type: "warning" });
+      // }
     },
     // 加载所有数据
     toLoadAll() {
@@ -517,6 +637,10 @@ export default {
         });
         this.isLogoState = true;
       }
+    },
+    // 时间范围选择。
+    selectTime(value) {
+      console.log(value);
     },
   },
   components: {},
@@ -610,9 +734,18 @@ export default {
       }
     }
   }
+  .file-search {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    .el-input {
+      width: 225px;
+    }
+  }
   .datas {
     display: flex;
     flex-wrap: wrap;
+    margin-left: 10px;
     .card {
       width: 160px;
       height: 110px;
@@ -627,6 +760,8 @@ export default {
       vertical-align: middle;
       display: flex;
       flex-direction: column;
+      // background-color: #cccccc80;
+      border-radius: 3px;
       .file-name {
         width: 100%;
         height: 20px;
@@ -703,6 +838,13 @@ export default {
       }
       img {
         vertical-align: middle;
+      }
+      .el-progress {
+        display: flex;
+        align-items: center;
+        /deep/.el-progress__text {
+          width: 58px;
+        }
       }
     }
 
