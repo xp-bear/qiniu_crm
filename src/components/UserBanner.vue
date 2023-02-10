@@ -62,8 +62,10 @@ export default {
     },
     // 增加香蕉接口
     insertBanana() {
+      // console.log(localStorage.getItem("time"));
       if (!localStorage.getItem("time")) {
         // 判断是不是今天
+
         // 在localstorage保存今天的日期
         let timer = new Date();
         let Y = timer.getFullYear(); //年
@@ -94,8 +96,8 @@ export default {
         let D = timer.getDate(); //日
         D = D < 10 ? "0" + D : D;
         let local_time = localStorage.getItem("time");
-
-        if (local_time == `${Y}-${M}-${D}`) {
+        console.log(local_time, `${Y}-${M}-${D}`);
+        if (local_time <= `${Y}-${M}-${D}`) {
           let timer = new Date();
           let Y = timer.getFullYear(); //年
           let M = timer.getMonth() + 1; //月

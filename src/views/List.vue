@@ -22,17 +22,17 @@
       </div>
     </div>
     <!-- 数据搜索栏 -->
-    <!-- <div class="file-search">
-      <el-select v-model="region" placeholder="文件类型" style="width: 150px">
-        <el-option label="图片" value="shanghai"></el-option>
-        <el-option label="区域二" value="beijing"></el-option>
+    <div class="file-search">
+      <el-select @change="updateFileType" v-model="searchType" placeholder="文件类型" style="width: 150px">
+        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
       </el-select>
-      <el-input placeholder="文件名称" v-model="input" clearable> </el-input>
-      <el-input placeholder="文件备注信息" v-model="input" clearable> </el-input>
-      <el-date-picker @change="selectTime" value-format="yyyy-M-d" v-model="time_range" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
-      <el-button type="primary">查询</el-button>
+      <el-input placeholder="文件名称" v-model="searchName" clearable> </el-input>
+      <el-input placeholder="文件备注信息" v-model="searchRemark" clearable> </el-input>
+      <el-date-picker @change="selectTime" value-format="yyyy-M-d" v-model="searchTimeRange" type="daterange" range-separator="→" start-placeholder="开始日期" end-placeholder="结束日期">
+      </el-date-picker>
+      <el-button type="primary" icon="el-icon-search">查询</el-button>
       <el-button type="warning">重置</el-button>
-    </div> -->
+    </div>
 
     <!-- 搜索栏数据查询 -->
     <el-empty v-if="filesArray.length <= 0" description="暂无数据，快去上传数据吧！"></el-empty>
@@ -79,8 +79,8 @@
     <!-- 对话框 -->
     <el-dialog style="padding: 0" top="1vh" :visible.sync="dialogVisible" width="80%" @close="closeDialog" :destroy-on-close="true">
       <span slot="title" class="Gradual">文件预览</span>
-      <div class="dialog">
-        <div class="d-file slider" style="position: relative">
+      <div class="dialog" style="position: relative">
+        <div class="d-file slider">
           <!-- <el-tooltip class="item" effect="light" content="点击文件，进入全屏预览。" placement="top"> -->
           <img v-if="fileDetail.file_type == 0" style="width: 100%" :src="fileDetail.file_link" alt="" />
           <video v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop>
@@ -169,9 +169,9 @@
           </div>
           <!-- </el-tooltip> -->
           <!-- 下载进度条展示 -->
-          <div style="display: flex; width: 100%; position: absolute; bottom: 0">
+          <div style="display: flex; width: 100%; position: absolute; bottom: -20px">
             <span>下载进度:&nbsp;</span>
-            <el-progress style="width: 92%" :percentage="download_process"></el-progress>
+            <el-progress style="width: 68%" :percentage="download_process"></el-progress>
           </div>
         </div>
 
@@ -249,8 +249,63 @@ export default {
       currentTime: 0, //播放时间
       totalTime: 0,
       isLogoState: true, //切换logo图片
-      time_range: "", //上传时间范围
       download_process: 0, //下载文件进度
+
+      searchTimeRange: "", //上传时间范围
+      searchType: "", //搜索文件类型
+      searchName: "", //搜索文件名称
+      searchRemark: "", //搜索文件备注
+      options: [
+        {
+          value: "-1",
+          label: "全部",
+        },
+        {
+          value: "0",
+          label: "图片",
+        },
+        {
+          value: "1",
+          label: "视频",
+        },
+        {
+          value: "9",
+          label: "音乐",
+        },
+        {
+          value: "7",
+          label: "压缩包",
+        },
+        {
+          value: "2",
+          label: "TXT文本",
+        },
+        {
+          value: "3",
+          label: "DOCX文档",
+        },
+        {
+          value: "4",
+          label: "PDF文件",
+        },
+        {
+          value: "5",
+          label: "PPT幻灯片",
+        },
+        {
+          value: "6",
+          label: "XLSX表格",
+        },
+
+        {
+          value: "10",
+          label: "EXE可执行程序",
+        },
+        {
+          value: "8",
+          label: "其他文件",
+        },
+      ],
     };
   },
   watch: {
@@ -293,6 +348,11 @@ export default {
     dateOne,
     downRow,
     getSize,
+    // 修改下拉框,选择值
+    updateFileType(value) {
+      console.log(value);
+    },
+
     // 下载文件三部曲
     async downloadFileProcess(fileUrl, fileName) {
       let blob = await this.getBlob(fileUrl);
