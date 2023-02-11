@@ -59,7 +59,8 @@ export function fileType(type) {
     type.includes(".html") ||
     type.includes(".css") ||
     type.includes(".less") ||
-    type.includes(".sass")
+    type.includes(".sass") ||
+    type.includes(".sql")
   ) {
     counter = 11;
   } else {

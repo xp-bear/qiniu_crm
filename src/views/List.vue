@@ -35,7 +35,7 @@
     </div>
 
     <!-- 搜索栏数据查询 -->
-    <el-empty v-if="filesArray.length <= 0" description="暂无数据！"></el-empty>
+    <el-empty style="height: 70vh" v-if="filesArray.length <= 0" description="暂无数据！"></el-empty>
     <!-- 数据展示页面 -->
     <!--  :style="`background-color:rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`" -->
     <div class="datas">
@@ -114,7 +114,8 @@
             <div id="mypdf" style="width: 100%; height: 100%"></div>
           </div>
           <div v-else-if="fileDetail.file_type == 5" style="height: 100%; display: flex; justify-content: center; align-items: center">
-            <img style="width: 128px; height: 128px" src="../assets/types/5.png" alt="" />
+            <!-- <img style="width: 128px; height: 128px" src="../assets/types/5.png" alt="" /> -->
+            <iframe style="width: 100%; height: 100%" :src="`http://view.officeapps.live.com/op/view.aspx?src=${fileDetail.file_link}`" frameborder="0"></iframe>
           </div>
           <div v-else-if="fileDetail.file_type == 6" style="height: 100%; display: flex; justify-content: center; align-items: center">
             <!-- <img style="width: 128px; height: 128px" src="../assets/types/6.png" alt="" /> -->
@@ -880,10 +881,13 @@ export default {
     }
   }
   .datas {
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
     margin-left: 10px;
+    width: 100%;
+    align-items: start;
     .card {
+      float: left;
       width: 160px;
       height: 110px;
       box-sizing: border-box;
@@ -940,12 +944,11 @@ export default {
   }
   .el-pagination {
     width: 100%;
-    height: 60px;
+    height: 30px;
     display: flex;
     justify-content: center;
     font-family: xp;
     padding: 10px 0;
-    font-size: 30px;
     /deep/.btn-next,
     /deep/.btn-prev {
       background-color: #ff6fa2;

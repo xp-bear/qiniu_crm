@@ -34,6 +34,7 @@ export default {
   margin: 0 auto;
   height: 80px;
   padding: 10px 0;
+ 
   box-sizing: border-box;
   // border-bottom: 1px solid #dcdfe6;
   display: flex;
