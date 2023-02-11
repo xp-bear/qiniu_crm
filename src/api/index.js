@@ -16,8 +16,8 @@ export const sameEmailApi = (data) => service.post("/sameemail", data);
 export const sendMailApi = (data) => service.post("/sendmail", data);
 // 登录接口。
 export const userLoginApi = (data) => service.post("/userlogin", data);
-// 查询文件接口
-export const findFileApi = (data) => service.post("/findfile", data);
+// 查询文件数量接口
+export const findFileCounterApi = (data) => service.post("/findfilecounter", data);
 // 查询文件接口
 export const findAllFileApi = (data) => service.post("/findallfile", data);
 // 删除文件接口
@@ -30,3 +30,5 @@ export const insertBananaApi = (data) => service.post("/insertbanana", data);
 export const updateUserInfoApi = (data) => service.post("/updateuserinfo", data);
 // 11.修改文件表的文件所属者
 export const fileEditNameApi = (data) => service.post("/fileeditname", data);
+// 12.相关文件多条件查询。
+export const fileMultipleFindApi = (data) => service.post("/filemultiplefind", data);

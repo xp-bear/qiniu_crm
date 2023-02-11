@@ -49,6 +49,19 @@ export function fileType(type) {
     counter = 9;
   } else if (type.includes(".exe")) {
     counter = 10;
+  } else if (
+    type.includes(".js") ||
+    type.includes(".ts") ||
+    type.includes(".py") ||
+    type.includes(".java") ||
+    type.includes(".php") ||
+    type.includes(".json") ||
+    type.includes(".html") ||
+    type.includes(".css") ||
+    type.includes(".less") ||
+    type.includes(".sass")
+  ) {
+    counter = 11;
   } else {
     counter = 8;
   }

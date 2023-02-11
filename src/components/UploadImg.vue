@@ -53,6 +53,9 @@
       <div v-else-if="ifFileType == 10" style="display: flex; justify-content: center; align-items: center">
         <img src="@/assets/types/10.png" />
       </div>
+      <div v-else-if="ifFileType == 11" style="display: flex; justify-content: center; align-items: center">
+        <img src="@/assets/types/11.png" />
+      </div>
     </div>
     <!-- 上传进度条 -->
     <el-progress type="line" style="width: 880px; margin-top: 2px" :stroke-width="6" :text-inside="false" :show-text="true" :percentage="proceed"></el-progress>

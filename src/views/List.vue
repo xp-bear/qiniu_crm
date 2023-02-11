@@ -23,19 +23,19 @@
     </div>
     <!-- 数据搜索栏 -->
     <div class="file-search">
-      <el-select @change="updateFileType" v-model="searchType" placeholder="文件类型" style="width: 150px">
+      <el-select @change="updateFileType" ref="fuzzySearch" v-model="searchType" placeholder="文件类型" style="width: 150px">
         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
       </el-select>
-      <el-input placeholder="文件名称" v-model="searchName" clearable> </el-input>
-      <el-input placeholder="文件备注信息" v-model="searchRemark" clearable> </el-input>
+      <el-input placeholder="搜索文件名称" v-model="searchName" clearable> </el-input>
+      <el-input placeholder="搜索文件备注信息" v-model="searchRemark" clearable> </el-input>
       <el-date-picker @change="selectTime" value-format="yyyy-M-d" v-model="searchTimeRange" type="daterange" range-separator="→" start-placeholder="开始日期" end-placeholder="结束日期">
       </el-date-picker>
-      <el-button type="primary" icon="el-icon-search">查询</el-button>
-      <el-button type="warning">重置</el-button>
+      <el-button @click="searchFiles" type="primary" icon="el-icon-search">查询数据</el-button>
+      <el-button @click="resetCondition" type="warning">重置条件</el-button>
     </div>
 
     <!-- 搜索栏数据查询 -->
-    <el-empty v-if="filesArray.length <= 0" description="暂无数据，快去上传数据吧！"></el-empty>
+    <el-empty v-if="filesArray.length <= 0" description="暂无数据！"></el-empty>
     <!-- 数据展示页面 -->
     <!--  :style="`background-color:rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`" -->
     <div class="datas">
@@ -69,13 +69,29 @@
         <div v-else-if="item.file_type == 10" style="display: flex; justify-content: center">
           <img style="width: 88px; height: 88px" src="../assets/types/10.png" alt="" />
         </div>
+        <div @click="openTxt(index)" v-else-if="item.file_type == 11" style="display: flex; justify-content: center">
+          <img style="width: 88px; height: 88px" src="../assets/types/11.png" alt="" />
+        </div>
         <!-- 角标 -->
         <div class="tag"><img :src="require(`../assets/types/${item.file_type}.png`)" alt="" /></div>
         <!-- 文件信息 -->
         <div class="file-name eclipse">{{ getListName(item.file_name, item.file_suffix) }}</div>
       </div>
     </div>
-
+    <!-- 分页 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[35, 70, 100, 150]"
+      :page-size="pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="totalNumber"
+      :background="true"
+      prev-text="上一页"
+      next-text="下一页"
+    >
+    </el-pagination>
     <!-- 对话框 -->
     <el-dialog style="padding: 0" top="1vh" :visible.sync="dialogVisible" width="80%" @close="closeDialog" :destroy-on-close="true">
       <span slot="title" class="Gradual">文件预览</span>
@@ -167,6 +183,9 @@
           <div v-else-if="fileDetail.file_type == 10" style="height: 100%; display: flex; justify-content: center; align-items: center">
             <img style="width: 128px; height: 128px" src="../assets/types/10.png" alt="" />
           </div>
+          <div v-else-if="fileDetail.file_type == 11">
+            <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.16em" v-html="txtInfo"></div>
+          </div>
           <!-- </el-tooltip> -->
           <!-- 下载进度条展示 -->
           <div style="display: flex; width: 100%; position: absolute; bottom: -20px">
@@ -221,7 +240,7 @@
   </div>
 </template>
 <script>
-import { findFileApi, getQiNiuDeleteFileApi, deleteFileApi, updateScreenNumberApi, findAllFileApi } from "@/api/index";
+import { fileMultipleFindApi, findFileCounterApi, getQiNiuDeleteFileApi, deleteFileApi, updateScreenNumberApi, findAllFileApi } from "@/api/index";
 import { getSize } from "@/utils/foramt";
 import { downRow } from "@/utils/upload";
 import { dateOne } from "@/utils/time_format";
@@ -257,10 +276,6 @@ export default {
       searchRemark: "", //搜索文件备注
       options: [
         {
-          value: "-1",
-          label: "全部",
-        },
-        {
           value: "0",
           label: "图片",
         },
@@ -275,6 +290,10 @@ export default {
         {
           value: "7",
           label: "压缩包",
+        },
+        {
+          value: "11",
+          label: "代码文件",
         },
         {
           value: "2",
@@ -306,6 +325,9 @@ export default {
           label: "其他文件",
         },
       ],
+      totalNumber: 0, //数据总条数
+      pageSize: 35, //每页多少条
+      currentPage: 1, //当前页码
     };
   },
   watch: {
@@ -326,21 +348,18 @@ export default {
     // 判断用户有没有登录。
     this.userObj = JSON.parse(localStorage.getItem("user"));
     if (this.userObj) {
+      // 绑定enter事件
+      this.enterKeyup();
+
       // 保存用户信息到vuex中
       this.$store.commit("getUser", this.userObj);
       // console.log("vuex的数据", this.$store.state.userObjStore);
 
-      // 加载该用户的所有上传的数据
-      findFileApi({ user_id: this.userObj ? this.userObj.id : 0 || 0 }).then((res) => {
-        this.filesArray = res.message;
-        // console.log(this.filesArray);
+      // 加载该用户的所有上传的数据的数量
+      findFileCounterApi({ user_id: this.$store.state.userObjStore.id }).then((res) => {
+        this.totalNumber = res.message[0].total_number;
+        this.searchFiles();
       });
-    } else {
-      if (this.userObj?.email == "1693889638@qq.com") {
-        findAllFileApi().then((res) => {
-          this.filesArray = res.message;
-        });
-      }
     }
   },
 
@@ -348,9 +367,63 @@ export default {
     dateOne,
     downRow,
     getSize,
+    handleSizeChange(val) {
+      // console.log(`每页 ${val} 条`);
+      this.pageSize = val;
+      this.searchFiles();
+    },
+    handleCurrentChange(val) {
+      // console.log(`当前页: ${val}`);
+      this.currentPage = val;
+      this.searchFiles();
+    },
+    // 重置初始条件。
+    resetCondition() {
+      this.searchTimeRange = "";
+      this.searchType = "";
+      this.searchName = "";
+      this.searchRemark = "";
+      this.searchFiles();
+    },
+    //销毁回车事件
+    enterKeyupDestroyed() {
+      document.removeEventListener("keyup", this.enterKey);
+    },
+    // 监听回车事件
+    enterKeyup() {
+      document.addEventListener("keyup", this.enterKey);
+    },
+    // 回车事件
+    enterKey(e) {
+      this.$refs.fuzzySearch.blur(); //通过ref直接绑定对应的selection调用blur方法即可隐藏下拉框
+      if (e.key == "Enter") {
+        this.searchFiles();
+      }
+    },
+    // 点击搜索框,筛选数据
+    searchFiles() {
+      findFileCounterApi({ user_id: this.$store.state.userObjStore.id, file_type: this.searchType != "" ? this.searchType : undefined }).then((result) => {
+        this.totalNumber = result.message[0].total_number;
+        // 请求数据
+        let data = {
+          file_user_id: this.$store.state.userObjStore.id,
+          file_type: this.searchType != "" ? this.searchType : undefined,
+          file_name: this.searchName ? this.searchName : undefined,
+          file_remark: this.searchRemark ? this.searchRemark : undefined,
+          time_range: this.searchTimeRange ? this.searchTimeRange : undefined,
+          page_num: this.currentPage, //当前页码
+          page_size: this.pageSize, //每一页数据条数
+        };
+        fileMultipleFindApi(data).then((res) => {
+          this.filesArray = res.message;
+        });
+      });
+    },
     // 修改下拉框,选择值
     updateFileType(value) {
-      console.log(value);
+      // console.log(value);
+      this.currentPage = 1;
+      this.searchFiles();
     },
 
     // 下载文件三部曲
@@ -703,6 +776,10 @@ export default {
       console.log(value);
     },
   },
+  destroyed() {
+    // 销毁enter事件
+    this.enterKeyupDestroyed();
+  },
   components: {},
 };
 </script>
@@ -859,6 +936,51 @@ export default {
           box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
         }
       }
+    }
+  }
+  .el-pagination {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    font-family: xp;
+    padding: 10px 0;
+    font-size: 30px;
+    /deep/.btn-next,
+    /deep/.btn-prev {
+      background-color: #ff6fa2;
+      color: #fff;
+      padding: 0 5px;
+    }
+    /deep/.el-pager li {
+      background-color: #ff6fa2;
+      color: #fff;
+      transition: all 0.3s;
+      &:hover {
+        border-radius: 100% 0;
+      }
+    }
+    /deep/.el-pager li:not(.disabled).active {
+      background-color: #ff6fa2;
+      color: #fff;
+      border-radius: 100% 0;
+    }
+    /deep/.el-pager li:not(.disabled) {
+      &:hover {
+        color: #fff;
+      }
+    }
+    /deep/.el-input__inner {
+      font-size: 14px;
+    }
+    /deep/.el-pagination__total {
+      font-size: 16px;
+    }
+    /deep/.el-input__inner:focus {
+      border-color: #ff6fa2;
+    }
+    /deep/.el-input .el-input__inner:hover {
+      border-color: #ff6fa2;
     }
   }
   .dialog {

@@ -19,5 +19,6 @@ const cardColor = [
   "rgba(95, 100, 166,0.6)",
   "rgba(220, 68, 163,0.6)",
   "rgba(13, 205, 240,0.6)",
+  "rgba(175, 233, 106,0.6)",
 ];
 export { baseUrl, cardColor };
