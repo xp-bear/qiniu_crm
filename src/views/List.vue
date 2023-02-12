@@ -970,7 +970,7 @@ export default {
     .d-file {
       width: 70%;
       height: 80vh;
-      text-align: center;
+      // text-align: center;
       box-sizing: border-box;
       overflow: auto;
 
