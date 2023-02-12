@@ -29,12 +29,14 @@
       <el-input placeholder="搜索文件备注信息" v-model="searchRemark" clearable> </el-input>
       <el-date-picker @change="selectTime" value-format="yyyy-M-d" v-model="searchTimeRange" type="daterange" range-separator="→" start-placeholder="开始日期" end-placeholder="结束日期">
       </el-date-picker>
-      <el-button @click="searchFiles" type="primary" icon="el-icon-search">查询数据</el-button>
-      <el-button @click="resetCondition" type="warning">重置条件</el-button>
+      <div>
+        <el-button @click="searchFiles" type="primary" icon="el-icon-search">查询数据</el-button>
+        <el-button @click="resetCondition" type="warning" icon="el-icon-refresh">重置条件</el-button>
+      </div>
     </div>
 
     <!-- 搜索栏数据查询 -->
-    <el-empty style="height: 70vh" v-if="filesArray.length <= 0" description="暂无数据！"></el-empty>
+    <el-empty style="height: 70vh" v-if="filesArray.length <= 0" description="暂无数据,快去上传吧。"></el-empty>
     <!-- 数据展示页面 -->
     <!--  :style="`background-color:rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`" -->
     <div class="datas">
@@ -123,17 +125,7 @@
           <div v-else-if="fileDetail.file_type == 8" style="height: 100%; display: flex; justify-content: center; align-items: center">
             <img style="width: 128px; height: 128px" src="../assets/types/8.png" alt="" />
           </div>
-          <div
-            v-else-if="fileDetail.file_type == 9"
-            style="
-              width: 100%;
-              height: 100%;
-              background: url('http://cdn.xxoutman.cn/tuchuang_music-1675916098865.jpg?1675916099175') no-repeat center;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            "
-          >
+          <div v-else-if="fileDetail.file_type == 9" class="audio-file">
             <div class="audio green-audio-player">
               <div class="loading" style="display: none">
                 <div class="spinner"></div>
@@ -674,6 +666,7 @@ export default {
               this.$message({
                 type: "success",
                 message: "资源删除成功!",
+                duration: 1000,
               });
             });
           });
@@ -682,6 +675,7 @@ export default {
           this.$message({
             type: "info",
             message: "已取消删除",
+            duration: 1000,
           });
         });
     },
@@ -841,8 +835,6 @@ export default {
     }
   }
   .datas {
-    // display: flex;
-    // flex-wrap: wrap;
     margin-left: 10px;
     width: 100%;
     align-items: start;
@@ -956,6 +948,14 @@ export default {
       font-family: consolas;
       line-height: 1.1em;
       color: #1c1c1e;
+      .audio-file {
+        width: 100%;
+        height: 100%;
+        background: url("http://cdn.xxoutman.cn/tuchuang_music-1675916098865.jpg?1675916099175") no-repeat center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
       img {
         vertical-align: middle;
         display: inline-block;

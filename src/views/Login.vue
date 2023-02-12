@@ -296,6 +296,11 @@ export default {
       sendMailApi({ useremail: this.rgForm.email }).then((resObj) => {
         // 2.验证码判断
         this.VerificationCode = resObj.VerificationCode;
+        this.$message({
+          message: "验证码已发送到您的邮箱，请注意查收！",
+          type: "success",
+          duration: 2000,
+        });
       });
 
       if (this.codeInfo == "获取验证码") {
