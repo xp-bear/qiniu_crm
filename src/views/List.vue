@@ -2,8 +2,7 @@
   <div class="List">
     <!-- 头部顶部栏 -->
     <div class="top">
-      <!-- <img v-if="!userObj" src="../assets/data.png" alt="" /> -->
-      <img @click="changeState" :src="isLogoState ? require('../assets/logo.png') : require('../assets/data.png')" alt="" />
+      <img :src="require('../assets/logo.png')" alt="" />
       <div class="logo">
         <a href="https://github.com/xp-bear" target="_blank"> <div class="github"></div> </a>
         <el-button v-if="userObj?.email == '1693889638@qq.com' || userObj?.email == '2603236601@qq.com'" type="success" style="height: 40px; margin-right: 10px" @click="toLoadAll">
@@ -97,8 +96,9 @@
       <span slot="title" class="Gradual">文件预览</span>
       <div class="dialog" style="position: relative">
         <div class="d-file slider">
-          <img ref="img" v-if="fileDetail.file_type == 0" :src="fileDetail.file_link" alt="" />
-
+          <div v-if="fileDetail.file_type == 0" style="width: 100%; height: 100%; text-align: center">
+            <img ref="img" :src="fileDetail.file_link" alt="" />
+          </div>
           <video ref="video" v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop>
             <source :src="fileDetail.file_link" type="video/mp4" />
           </video>
@@ -106,20 +106,15 @@
             <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.16em" v-html="txtInfo"></div>
           </div>
           <div v-else-if="fileDetail.file_type == 3" style="height: 100%; display: flex; justify-content: center; align-items: center">
-            <!-- <img style="width: 128px; height: 128px" src="../assets/types/3.png" alt="" /> -->
             <div ref="file" style="width: 100%; height: 100%"></div>
           </div>
           <div v-else-if="fileDetail.file_type == 4" style="height: 100%; display: flex; justify-content: center; align-items: center">
-            <!-- <img style="width: 128px; height: 128px" src="../assets/types/4.png" alt="" /> -->
             <div id="mypdf" style="width: 100%; height: 100%"></div>
           </div>
           <div v-else-if="fileDetail.file_type == 5" style="height: 100%; display: flex; justify-content: center; align-items: center">
-            <!-- <img style="width: 128px; height: 128px" src="../assets/types/5.png" alt="" /> -->
             <iframe style="width: 100%; height: 100%" :src="`http://view.officeapps.live.com/op/view.aspx?src=${fileDetail.file_link}`" frameborder="0"></iframe>
           </div>
           <div v-else-if="fileDetail.file_type == 6" style="height: 100%; display: flex; justify-content: center; align-items: center">
-            <!-- <img style="width: 128px; height: 128px" src="../assets/types/6.png" alt="" /> -->
-            <!-- https://docs.google.com/viewer?url=http://cdn.xxoutman.cn/tt-1675865071390.xlsx?1675865071597 -->
             <iframe style="width: 100%; height: 100%" :src="`https://view.officeapps.live.com/op/view.aspx?src=${fileDetail.file_link}`" frameborder="0"></iframe>
           </div>
           <div v-else-if="fileDetail.file_type == 7" style="height: 100%; display: flex; justify-content: center; align-items: center">
@@ -139,10 +134,6 @@
               align-items: center;
             "
           >
-            <!--  background: linear-gradient(-65deg, #43c6ac, #f8ffae); -->
-            <!--  background: url(http://cdn.xxoutman.cn/tuchuang_music-1675916098865.jpg?1675916099175); -->
-            <!-- <img style="width: 128px; height: 128px" src="../assets/types/8.png" alt="" /> -->
-            <!-- <audio :src="fileDetail.file_link" autoplay controls></audio> -->
             <div class="audio green-audio-player">
               <div class="loading" style="display: none">
                 <div class="spinner"></div>
@@ -198,30 +189,35 @@
           <ul style="margin: 0; padding: 0; font-size: 16px">
             <li style="display: flex; align-items: center">
               <span style="width: 85px">文件名称:</span>
-              <el-tag @click="copyLink(fileDetail.file_name + fileDetail.file_suffix)" style="cursor: pointer; flex: 1" class="eclipse">{{ fileDetail.file_name + fileDetail.file_suffix }}</el-tag>
+              <span @click="copyLink(fileDetail.file_name + fileDetail.file_suffix)" style="cursor: pointer; flex: 1" class="eclipse">{{ fileDetail.file_name + fileDetail.file_suffix }}</span>
             </li>
             <li style="display: flex; align-items: center">
-              <span style="width: 85px">文件大小:</span><el-tag style="flex: 1" class="eclipse" type="success">{{ getSize(parseInt(fileDetail.file_size)) }}</el-tag>
+              <span style="width: 85px">文件大小:</span>
+              <span @click="copyLink(getSize(parseInt(fileDetail.file_size)))" style="cursor: pointer; flex: 1" class="eclipse">{{ getSize(parseInt(fileDetail.file_size)) }}</span>
             </li>
             <li style="display: flex; align-items: center">
-              <span style="width: 85px">上传时间:</span><el-tag style="flex: 1" class="eclipse" type="warning">{{ dateOne(fileDetail.file_upload_time) }}</el-tag>
+              <span style="width: 85px">上传时间:</span>
+              <span @click="copyLink(dateOne(fileDetail.file_upload_time))" style="cursor: pointer; flex: 1" class="eclipse">{{ dateOne(fileDetail.file_upload_time) }}</span>
             </li>
             <li style="display: flex; align-items: center">
               <span style="width: 85px">文件链接:</span>
-              <el-tag @click="copyLink(fileDetail.file_link)" style="flex: 1; cursor: pointer" class="eclipse">{{ fileDetail.file_link }}</el-tag>
+              <span @click="copyLink(fileDetail.file_link)" style="flex: 1; cursor: pointer" class="eclipse">{{ fileDetail.file_link }}</span>
             </li>
             <li style="display: flex; align-items: center">
-              <span style="width: 85px">地理位置:</span
-              ><el-tag @click="copyLink(fileDetail.file_address)" style="cursor: pointer; flex: 1" class="eclipse" type="success">{{ fileDetail.file_address }}</el-tag>
+              <span style="width: 85px">地理位置:</span>
+              <span @click="copyLink(fileDetail.file_address)" style="cursor: pointer; flex: 1" class="eclipse" type="success">{{ fileDetail.file_address }}</span>
             </li>
             <li style="display: flex; align-items: center">
-              <span style="width: 85px">文件所属者:</span><el-tag @click="copyLink(fileDetail.file_user_name)" style="flex: 1" class="eclipse" type="warning">{{ fileDetail.file_user_name }}</el-tag>
+              <span style="width: 85px">文件所属者:</span>
+              <span @click="copyLink(fileDetail.file_user_name)" style="cursor: pointer; flex: 1" class="eclipse" type="warning">{{ fileDetail.file_user_name }}</span>
             </li>
             <li style="display: flex; align-items: center">
-              <span style="width: 85px">文件浏览量:</span><el-tag style="flex: 1" class="eclipse" type="danger">{{ fileDetail.file_view }}</el-tag>
+              <span style="width: 85px">文件浏览量:</span>
+              <span @click="copyLink(fileDetail.file_view)" style="cursor: pointer; flex: 1" class="eclipse">{{ fileDetail.file_view }} 次</span>
             </li>
             <li>
-              文件备注信息: <code style="font-family: xp">{{ fileDetail.file_remark }}</code>
+              <span>文件备注信息:</span>
+              <code @click="copyLink(fileDetail.file_remark)" style="font-family: xp; color: #6a9955; cursor: pointer">&nbsp; {{ fileDetail.file_remark }}</code>
             </li>
           </ul>
           <!-- 下载按钮 -->
@@ -262,7 +258,7 @@ export default {
       totalMusicTime: "0:00", //总时长 5:15
       currentTime: 0, //播放时间
       totalTime: 0,
-      isLogoState: true, //切换logo图片
+
       download_process: 0, //下载文件进度
 
       searchTimeRange: "", //上传时间范围
@@ -714,12 +710,9 @@ export default {
     // 加载所有数据
     toLoadAll() {
       // 没有数据,加载数据星球
-      findAllFileApi().then((res) => {
+      findAllFileApi({ user_id: this.$store.state.userObjStore.id }).then((res) => {
         this.filesArray = res.message;
       });
-
-      // 修改logo图片
-      this.isLogoState = false;
     },
     // 修改播放与暂停状态
     changeClass() {
@@ -738,19 +731,7 @@ export default {
       this.currentTime = (this.process / 100) * this.totalTime;
       this.$refs.audio.currentTime = this.currentTime;
     },
-    // 点击数据星球
-    changeState() {
-      // console.log(this.isLogoState);
-      if (this.isLogoState == false) {
-        // 数据星球点击
-        // 加载该用户的所有上传的数据
-        findFileApi({ user_id: this.userObj ? this.userObj.id : 0 || 0 }).then((res) => {
-          this.filesArray = res.message;
-          // console.log(this.filesArray);
-        });
-        this.isLogoState = true;
-      }
-    },
+
     // 时间范围选择。
     selectTime(value) {
       console.log(value);
@@ -970,10 +951,11 @@ export default {
     .d-file {
       width: 70%;
       height: 80vh;
-      // text-align: center;
       box-sizing: border-box;
       overflow: auto;
-
+      font-family: consolas;
+      line-height: 1.1em;
+      color: #1c1c1e;
       img {
         vertical-align: middle;
         display: inline-block;
@@ -1020,11 +1002,9 @@ export default {
       justify-content: space-between;
       margin-left: 10px;
       font-size: 16px;
-      // background-color: rebeccapurple;
       overflow: hidden;
       /deep/.el-tag {
         font-size: 16px;
-        // font-weight: 700;
         font-family: xp;
         letter-spacing: 0.05em;
       }
@@ -1032,6 +1012,25 @@ export default {
         li {
           list-style: none;
           margin-bottom: 20px;
+          span {
+            &:nth-child(1) {
+              text-align: right;
+              font-family: xp;
+            }
+            &:nth-child(2) {
+              font-family: xp;
+              padding: 5px 8px;
+              border-radius: 3px;
+              border: 1px solid transparent;
+              background-image: linear-gradient(60deg, #f12711, #f5af19);
+              background-clip: text;
+              color: transparent;
+
+              // &:hover {
+              //   border: 1px solid #409eff60;
+              // }
+            }
+          }
         }
       }
     }

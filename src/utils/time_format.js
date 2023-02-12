@@ -15,7 +15,7 @@ export const dateOne = (e) => {
   hh < 10 ? (hh = "0" + hh) : hh;
   mm < 10 ? (mm = "0" + mm) : mm;
   ss < 10 ? (ss = "0" + ss) : ss;
-  return `${Y}/${M}/${D}  ${hh}:${mm}`;
+  return `${Y}年/${M}月/${D}日\t${hh}点:${mm}分`;
 };
 
 // 获取某天日期的下一天，默认为第二天 默认输出格式为yyyy-mm-dd

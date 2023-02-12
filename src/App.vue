@@ -10,7 +10,10 @@
 }
 @font-face {
   font-family: xp;
-  // src: url("@/assets/fonts/two.ttf");
   src: url("http://cdn.xxoutman.cn/two.ttf");
+}
+@font-face {
+  font-family: consolas;
+  src: url("http://cdn.xxoutman.cn/one.ttf");
 }
 </style>
