@@ -132,7 +132,7 @@
               </div>
               <!-- 播放与暂停 -->
               <div class="play-pause-btn" style="display: flex">
-                <i style="width: 24px; height: 24px; font-size: 24px" class="iconfont" :class="isPlaying ? 'icon-24gf-pause2' : 'icon-24gf-play'" @click="changeClass"></i>
+                <i style="width: 24px; height: 15px; font-size: 24px; color: #566574" class="iconfont" :class="isPlaying ? 'icon-24gf-pause2' : 'icon-24gf-play'" @click="changeClass"></i>
               </div>
               <div class="controls">
                 <span class="current-time"> {{ currentMusicTime }} </span>
