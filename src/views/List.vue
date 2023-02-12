@@ -97,9 +97,9 @@
       <span slot="title" class="Gradual">文件预览</span>
       <div class="dialog" style="position: relative">
         <div class="d-file slider">
-          <!-- <el-tooltip class="item" effect="light" content="点击文件，进入全屏预览。" placement="top"> -->
-          <img v-if="fileDetail.file_type == 0" style="width: 100%" :src="fileDetail.file_link" alt="" />
-          <video v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop>
+          <img ref="img" v-if="fileDetail.file_type == 0" :src="fileDetail.file_link" alt="" />
+
+          <video ref="video" v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop>
             <source :src="fileDetail.file_link" type="video/mp4" />
           </video>
           <div v-else-if="fileDetail.file_type == 2">
@@ -187,11 +187,10 @@
           <div v-else-if="fileDetail.file_type == 11">
             <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.16em" v-html="txtInfo"></div>
           </div>
-          <!-- </el-tooltip> -->
           <!-- 下载进度条展示 -->
-          <div style="display: flex; width: 100%; position: absolute; bottom: -20px">
-            <span>下载进度:&nbsp;</span>
-            <el-progress style="width: 68%" :percentage="download_process"></el-progress>
+          <div style="display: flex; justify-content: center; width: 70%; position: absolute; bottom: -20px">
+            <span style="width: 80px">下载进度:&nbsp;</span>
+            <el-progress style="width: 100%" :percentage="download_process"></el-progress>
           </div>
         </div>
 
@@ -232,11 +231,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span> -->
     </el-dialog>
   </div>
 </template>
@@ -536,6 +530,20 @@ export default {
           };
         }
       }, 500);
+
+      // 判断是不是图片
+      setTimeout(() => {
+        if (this.$refs.img) {
+          console.log("图片尺寸: ", this.$refs.img.width, this.$refs.img.height);
+          if (this.$refs.img.width > 1037) {
+            this.$refs.img.style.width = "100%";
+          } else {
+            if (this.$refs.img.height > 558) {
+              this.$refs.img.style.height = "100%";
+            }
+          }
+        }
+      }, 300);
     },
 
     //跳转到登录页面。
@@ -590,15 +598,6 @@ export default {
     },
     //关闭的回调函数
     closeDialog() {
-      // console.log(22);
-      // 取消下载文件事件监听
-      // const xhr = new XMLHttpRequest();
-      // xhr.abort();
-      // xhr.removeEventListener("progress", () => {
-      //   this.getBlob();
-      //   console.log(11);
-      // });
-
       this.fileDetail = ""; //清空对话框里面的数据
       this.isPlaying = false;
       this.currentTime = 0;
@@ -711,26 +710,6 @@ export default {
       name.pop();
       name = name.join("-");
       this.downloadFileProcess(this.fileDetail.file_link, name, this.fileDetail.file_suffix);
-
-      // 节流的使用
-      // if (this.clicktag == 0) {
-      //   this.$message({
-      //     type: "success",
-      //     message: "已经开始下载该资源啦！",
-      //     duration: 2000,
-      //   });
-      //   this.clicktag = 1;
-      //   // 处理文件名
-      //   let name = this.fileDetail.file_name.split("-");
-      //   name.pop();
-      //   name = name.join("-");
-      //   this.downRow(this.fileDetail.file_link, name, this.fileDetail.file_suffix);
-      //   setTimeout(() => {
-      //     this.clicktag = 0;
-      //   }, 3000);
-      // } else {
-      //   this.$mb.alert("当前资源正在下载中,请勿重复点击!", "熊仔图床提示您", { confirmButtonText: "确定", type: "warning" });
-      // }
     },
     // 加载所有数据
     toLoadAll() {
@@ -960,13 +939,13 @@ export default {
       color: #fff;
       transition: all 0.3s;
       &:hover {
-        border-radius: 100% 0;
+        border-radius: 90% 0;
       }
     }
     /deep/.el-pager li:not(.disabled).active {
       background-color: #ff6fa2;
       color: #fff;
-      border-radius: 100% 0;
+      border-radius: 90% 0;
     }
     /deep/.el-pager li:not(.disabled) {
       &:hover {
@@ -988,14 +967,17 @@ export default {
   }
   .dialog {
     display: flex;
-    // background-color: pink;
     .d-file {
       width: 70%;
+      height: 80vh;
+      text-align: center;
       box-sizing: border-box;
       overflow: auto;
-      // box-shadow: 0 0px 3px 0 rgba(0, 0, 0, 0.1);
-      // background-color: #409eff;
-      height: 80vh;
+
+      img {
+        vertical-align: middle;
+        display: inline-block;
+      }
       /deep/.el-slider__button {
         width: 16px;
         height: 16px;
@@ -1021,9 +1003,7 @@ export default {
         height: 16px;
         top: -9px;
       }
-      img {
-        vertical-align: middle;
-      }
+
       .el-progress {
         display: flex;
         align-items: center;

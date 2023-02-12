@@ -347,7 +347,7 @@ export default {
 
   width: 100%;
   height: 100vh;
-  background-image: url(http://cdn.xxoutman.cn/qiniu_bg.png?1675390943521);
+  background-image: url(http://cdn.xxoutman.cn/qiniu_bg-1676171779647.png?1676171780442);
   background-size: cover;
   display: flex;
   justify-content: center;
@@ -361,7 +361,6 @@ export default {
       width: 430px;
       height: 408px;
       background: #fff;
-      right: 200px;
       margin-top: 100px;
       box-sizing: border-box;
       opacity: 0.95;
@@ -418,12 +417,9 @@ export default {
       position: absolute;
       width: 430px;
       height: 552px;
-      right: 200px;
-      margin-top: 50px;
+      margin-top: 35px;
       background: #fff;
-      right: 200px;
       box-sizing: border-box;
-      // opacity: 0.95;
       padding: 25px;
       border-radius: 3px;
       overflow: hidden;
