@@ -699,7 +699,7 @@ export default {
       let name = this.fileDetail.file_name.split("-");
       name.pop();
       name = name.join("-");
-      this.downloadFileProcess(this.fileDetail.file_link, name, this.fileDetail.file_suffix);
+      this.downloadFileProcess(this.fileDetail.file_link, name + this.fileDetail.file_suffix);
     },
     // 加载所有数据
     toLoadAll() {
