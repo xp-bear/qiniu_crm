@@ -523,11 +523,17 @@ export default {
       setTimeout(() => {
         if (this.$refs.img) {
           console.log("图片尺寸: ", this.$refs.img.width, this.$refs.img.height);
+
           if (this.$refs.img.width > 1037) {
             this.$refs.img.style.width = "100%";
+            this.$refs.img.style.opacity = 1;
           } else {
             if (this.$refs.img.height > 558) {
+              this.$refs.img.style.overflow = "hidden";
               this.$refs.img.style.height = "100%";
+              this.$refs.img.style.opacity = 1;
+            } else {
+              this.$refs.img.style.opacity = 1;
             }
           }
         }
@@ -959,6 +965,8 @@ export default {
       img {
         vertical-align: middle;
         display: inline-block;
+        opacity: 0;
+        transition: all 0.3s;
       }
       /deep/.el-slider__button {
         width: 16px;
