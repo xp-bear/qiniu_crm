@@ -99,7 +99,7 @@
       <div class="dialog" style="position: relative">
         <div class="d-file slider">
           <div v-if="fileDetail.file_type == 0" style="width: 100%; height: 100%; text-align: center">
-            <img ref="img" :src="fileDetail.file_link" alt="" />
+            <img ref="img" class="file-img" :src="fileDetail.file_link" alt="" />
           </div>
           <video ref="video" v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop>
             <source :src="fileDetail.file_link" type="video/mp4" />
@@ -529,7 +529,6 @@ export default {
             this.$refs.img.style.opacity = 1;
           } else {
             if (this.$refs.img.height > 558) {
-              this.$refs.img.style.overflow = "hidden";
               this.$refs.img.style.height = "100%";
               this.$refs.img.style.opacity = 1;
             } else {
@@ -965,8 +964,10 @@ export default {
       img {
         vertical-align: middle;
         display: inline-block;
-        opacity: 0;
         transition: all 0.3s;
+      }
+      .file-img {
+        opacity: 0;
       }
       /deep/.el-slider__button {
         width: 16px;
