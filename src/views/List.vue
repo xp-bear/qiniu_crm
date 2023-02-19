@@ -525,12 +525,12 @@ export default {
           console.log("图片尺寸: ", this.$refs.img.width, this.$refs.img.height);
 
           if (this.$refs.img.width > 1037) {
-            this.$refs.dFile.style.overflowX = "auto";
+            this.$refs.dFile.style.overflowX = "hidden";
             this.$refs.img.style.width = "100%";
             this.$refs.img.style.opacity = 1;
           } else {
             if (this.$refs.img.height > 558) {
-              this.$refs.dFile.style.overflowY = "auto";
+              this.$refs.dFile.style.overflowY = "hidden";
               this.$refs.img.style.height = "100%";
               this.$refs.img.style.opacity = 1;
             } else {
@@ -951,7 +951,7 @@ export default {
       width: 70%;
       height: 80vh;
       box-sizing: border-box;
-      // overflow: hidden;
+      overflow: auto;
       font-family: consolas;
       line-height: 1.1em;
       color: #1c1c1e;
