@@ -97,7 +97,7 @@
     <el-dialog style="padding: 0" top="1vh" :visible.sync="dialogVisible" width="80%" @close="closeDialog" :destroy-on-close="true">
       <span slot="title" class="Gradual">文件预览</span>
       <div class="dialog" style="position: relative">
-        <div class="d-file slider">
+        <div ref="dFile" class="d-file slider">
           <div v-if="fileDetail.file_type == 0" style="width: 100%; height: 100%; text-align: center">
             <img ref="img" class="file-img" :src="fileDetail.file_link" alt="" />
           </div>
@@ -525,10 +525,12 @@ export default {
           console.log("图片尺寸: ", this.$refs.img.width, this.$refs.img.height);
 
           if (this.$refs.img.width > 1037) {
+            this.$refs.dFile.style.overflowX = "auto";
             this.$refs.img.style.width = "100%";
             this.$refs.img.style.opacity = 1;
           } else {
             if (this.$refs.img.height > 558) {
+              this.$refs.dFile.style.overflowY = "auto";
               this.$refs.img.style.height = "100%";
               this.$refs.img.style.opacity = 1;
             } else {
@@ -949,7 +951,7 @@ export default {
       width: 70%;
       height: 80vh;
       box-sizing: border-box;
-      overflow: auto;
+      // overflow: hidden;
       font-family: consolas;
       line-height: 1.1em;
       color: #1c1c1e;
