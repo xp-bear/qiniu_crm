@@ -5,7 +5,7 @@
       <img :src="require('../assets/logo.png')" alt="" />
       <div class="logo">
         <a href="https://github.com/xp-bear" target="_blank"> <div class="github"></div> </a>
-        <el-button v-if="userObj?.email == '1693889638@qq.com' || userObj?.email == '2603236601@qq.com'" type="success" style="height: 40px; margin-right: 10px" @click="toLoadAll">
+        <el-button v-if="userObj?.email == '1693889638@qq.com'" type="success" style="height: 40px; margin-right: 10px" @click="toLoadAll">
           <i class="el-icon-box"></i>
           <span>数据星球 Home</span>
         </el-button>
