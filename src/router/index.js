@@ -55,7 +55,7 @@ router.beforeEach((to, from, next) => {
   } else {
     token = "";
   }
-
+  
   if (!token) {
     if (to.path === "/login") {
       next(); // 系统根路由

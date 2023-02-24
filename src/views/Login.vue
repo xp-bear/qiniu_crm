@@ -92,6 +92,7 @@
 </template>
 <script>
 import { createUserApi, sameEmailApi, sendMailApi, userLoginApi } from "@/api/index";
+
 export default {
   name: "Login",
   data() {
@@ -196,6 +197,11 @@ export default {
               // 保存token到localstorage
               window.localStorage.setItem("token", res.token);
               window.localStorage.setItem("user", JSON.stringify(res.userObj));
+              // 设置定时器,定时清除localstorage中的数据
+              setTimeout(() => {
+                console.log("token过期");
+                window.localStorage.setItem("token", "");
+              }, 1000 * 60 * 60 * 24 * 7); //一周的过期时间
               setTimeout(() => {
                 this.$router.push({
                   path: "/",

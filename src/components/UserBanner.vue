@@ -43,9 +43,7 @@ import { getNextDate } from "@/utils/time_format";
 export default {
   name: "UserBanner",
   data() {
-    return {
-      isBananaState: false, //今天是否签到
-    };
+    return {};
   },
   mounted() {
     // let timer = new Date();
@@ -53,7 +51,6 @@ export default {
     //   let M = timer.getMonth() + 1; //月
     //   let D = timer.getDate(); //日
     // console.log(getNextDate(`${Y}-${M}-${D}`));
-    console.log();
   },
   methods: {
     getNextDate,

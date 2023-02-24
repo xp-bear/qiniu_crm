@@ -330,6 +330,7 @@ export default {
   mounted() {
     // 判断用户有没有登录。
     this.userObj = JSON.parse(localStorage.getItem("user"));
+    
     if (this.userObj) {
       // 绑定enter事件
       this.enterKeyup();
