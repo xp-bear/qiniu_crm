@@ -92,7 +92,7 @@
 </template>
 <script>
 import { createUserApi, sameEmailApi, sendMailApi, userLoginApi } from "@/api/index";
-
+import { getNextDate } from "@/utils/time_format";
 export default {
   name: "Login",
   data() {
@@ -165,6 +165,7 @@ export default {
   },
 
   methods: {
+    getNextDate,
     // 跳转注册页面。
     toRegister() {
       this.rgState = 1;
@@ -197,11 +198,14 @@ export default {
               // 保存token到localstorage
               window.localStorage.setItem("token", res.token);
               window.localStorage.setItem("user", JSON.stringify(res.userObj));
-              // 设置定时器,定时清除localstorage中的数据
-              setTimeout(() => {
-                console.log("token过期");
-                window.localStorage.setItem("token", "");
-              }, 1000 * 60 * 60 * 24 * 7); //一周的过期时间
+
+              // 在localstorage保存登录的日期
+              let timer = new Date();
+              let Y = timer.getFullYear(); //年
+              let M = timer.getMonth() + 1; //月
+              let D = timer.getDate(); //日
+              localStorage.setItem("past_due", getNextDate(`${Y}-${M}-${D}`, 7));
+
               setTimeout(() => {
                 this.$router.push({
                   path: "/",

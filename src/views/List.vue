@@ -209,7 +209,7 @@
             </li>
             <li>
               <span>文件备注信息:</span>
-              <code @click="copyLink(fileDetail.file_remark)" style="font-family: xp; color: #6a9955; cursor: pointer">&nbsp; {{ fileDetail.file_remark }}</code>
+              <code style="font-family: xp; color: #6a9955; cursor: pointer">&nbsp; {{ fileDetail.file_remark }}</code>
             </li>
           </ul>
           <!-- 下载按钮 -->
@@ -328,9 +328,18 @@ export default {
     },
   },
   mounted() {
+    // 定时localstorage过期时间
+    let new_time = new Date().getTime(); //秒数
+    let old_time = new Date(window.localStorage.getItem("past_due") || "0").getTime(); //过期的秒数
+    if (new_time > old_time) {
+      console.log("token过期");
+      window.localStorage.setItem("token", "");
+      this.$router.push({ path: "/upload" });
+    }
+
     // 判断用户有没有登录。
     this.userObj = JSON.parse(localStorage.getItem("user"));
-    
+
     if (this.userObj) {
       // 绑定enter事件
       this.enterKeyup();
