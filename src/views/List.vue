@@ -41,7 +41,7 @@
     <!--  :style="`background-color:rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`" -->
     <div class="datas">
       <div class="card" :style="`background:${cardColor[item.file_type]}`" @click="openMark(index)" v-for="(item, index) in filesArray" :key="item.file_id">
-        <div v-if="item.file_type == 0" :style="`background: url('${item.file_link}') top center; height:88px; background-size:cover;`"></div>
+        <div class="img-card" v-if="item.file_type == 0" :style="`background: url('${item.file_link}') top center; height:88px; background-size:cover;`"></div>
         <video v-else-if="item.file_type == 1" :src="item.file_link" style="height: 88px"></video>
         <div @click="openTxt(index)" v-else-if="item.file_type == 2" style="display: flex; justify-content: center">
           <img style="width: 88px; height: 88px" src="../assets/types/2.png" alt="" />
@@ -99,7 +99,13 @@
       <div class="dialog" style="position: relative">
         <div ref="dFile" class="d-file slider">
           <div v-if="fileDetail.file_type == 0" style="width: 100%; height: 100%; text-align: center">
-            <img ref="img" class="file-img" :src="fileDetail.file_link" alt="" />
+            <img
+              ref="img"
+              class="file-img"
+              :src="fileDetail.file_link"
+              alt=""
+              style="background: url('http://cdn.xxoutman.cn/%E9%A9%AC%E8%B5%9B%E5%85%8B-1678353275378.png?1678353275530'); vertical-align: middle"
+            />
           </div>
           <video ref="video" v-else-if="fileDetail.file_type == 1" style="width: 100%" controls autoplay loop>
             <source :src="fileDetail.file_link" type="video/mp4" />
@@ -872,6 +878,12 @@ export default {
       flex-direction: column;
       // background-color: #cccccc80;
       border-radius: 3px;
+      .img-card {
+        transition: all 1s;
+        &:hover {
+          background-position: bottom center !important;
+        }
+      }
       .file-name {
         width: 100%;
         height: 20px;

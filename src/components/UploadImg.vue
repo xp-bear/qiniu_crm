@@ -70,7 +70,7 @@
       </div>
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="文件名称" prop="name">
-          <el-input v-model="ruleForm.name" style="width: 79%"></el-input>
+          <el-input v-model="ruleForm.name" style="width: 79%" ref="is_name_focus"></el-input>
           <el-select v-model="ruleForm.suffix" placeholder="后缀名" style="width: 20%; float: right" :disabled="true">
             <el-option label=".jpg" value=".jpg"></el-option>
             <el-option label=".png" value=".png"></el-option>
@@ -126,6 +126,7 @@ export default {
       proceed: 0, //上传进度
       idUpBtn: false, //上传按钮状态 true禁止上传
       fileAddress: "", //图片的地理位置
+      // is_name_focus: false, //名字输入框是否聚焦
     };
   },
 
@@ -209,7 +210,7 @@ export default {
                     that.idUpBtn = false;
                   }); //在数据库新增一条数据
                 }
-                
+
                 // 获取复制文件资源地址 , 获取粘贴板的内容
                 if (navigator.clipboard && window.isSecureContext) {
                   navigator.clipboard.writeText(that.url);
@@ -303,6 +304,9 @@ export default {
 
       // 文件类型格式处理
       this.ifFileType = fileType(type);
+
+      // 文件名称输入框聚焦
+      this.$refs.is_name_focus.focus();
     },
     // 拖拽事件
     handleDrop(e) {
@@ -325,6 +329,9 @@ export default {
       let type = this.fileDetail.name;
       // 文件类型格式处理
       this.ifFileType = fileType(type);
+
+      // 文件名称输入框聚焦
+      this.$refs.is_name_focus.focus();
 
       this.url = getObjectURL(this.fileDetail);
       // console.log(this.fileDetail);
@@ -372,6 +379,9 @@ export default {
 
             // 文件类型格式处理
             this.ifFileType = fileType(type);
+            
+            // 文件名称输入框聚焦
+            this.$refs.is_name_focus.focus();
 
             this.url = getObjectURL(this.fileDetail);
             break;
