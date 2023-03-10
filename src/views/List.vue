@@ -97,6 +97,9 @@
     <el-dialog style="padding: 0" top="1vh" :visible.sync="dialogVisible" width="80%" @close="closeDialog" :destroy-on-close="true">
       <span slot="title" class="Gradual">文件预览</span>
       <div class="dialog" style="position: relative">
+        <span v-show="fileDetail.file_type == 0" style="position: absolute; left: 0%; top: -3%; font-family: 'consolas'; background-color: #eaecef; padding: 2px 4px; border-radius: 3px"
+          >图片尺寸: {{ imgWidth }}×{{ imgHeight }}</span
+        >
         <div ref="dFile" class="d-file slider">
           <div v-if="fileDetail.file_type == 0" style="width: 100%; height: 100%; text-align: center">
             <img
@@ -317,6 +320,9 @@ export default {
       totalNumber: 0, //数据总条数
       pageSize: 35, //每页多少条
       currentPage: 1, //当前页码
+
+      imgWidth: 0, //图片宽度
+      imgHeight: 0, //图片高度
     };
   },
   watch: {
@@ -538,8 +544,10 @@ export default {
       // 判断是不是图片
       setTimeout(() => {
         if (this.$refs.img) {
-          console.log("图片尺寸: ", this.$refs.img.width, this.$refs.img.height);
-
+          // console.log("图片尺寸: ", this.$refs.img.width, this.$refs.img.height);
+          this.imgWidth = this.$refs.img.width;
+          this.imgHeight = this.$refs.img.height;
+          // console.log(this.imgWidth, this.imgHeight);
           if (this.$refs.img.width > 1037) {
             this.$refs.dFile.style.overflowX = "hidden";
             this.$refs.img.style.width = "100%";
