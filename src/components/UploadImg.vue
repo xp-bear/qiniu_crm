@@ -70,13 +70,17 @@
       </div>
       <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
         <el-form-item label="文件名称" prop="name">
-          <el-input v-model="ruleForm.name" style="width: 79%" ref="is_name_focus"></el-input>
-          <el-select v-model="ruleForm.suffix" placeholder="后缀名" style="width: 20%; float: right" :disabled="true">
+          <el-input v-model="ruleForm.name" style="width: 67%" ref="is_name_focus"></el-input>
+          <el-select v-model="ruleForm.suffix" placeholder="后缀名" style="width: 15%; float: right" :disabled="true">
             <el-option label=".jpg" value=".jpg"></el-option>
             <el-option label=".png" value=".png"></el-option>
             <el-option label=".jpeg" value=".jpeg"></el-option>
             <el-option label=".mp4" value=".mp4"></el-option>
             <el-option label=".avi" value=".avi"></el-option>
+          </el-select>
+          <el-select v-model="ruleForm.timestamp" placeholder="时间戳" style="width: 18%; float: right" :disabled="false">
+            <el-option label="添加时间戳" :value="true"></el-option>
+            <el-option label="取消时间戳" :value="false"></el-option>
           </el-select>
         </el-form-item>
 
@@ -114,6 +118,7 @@ export default {
         region: "cookies", //存储区域。
         suffix: "", //后缀名称。
         remarkName: "", //上传文件备注信息
+        timestamp: true, //是否添加时间戳。
       },
       rules: {
         name: [{ required: true, message: "文件名称为必填项~", trigger: "change" }],
@@ -150,10 +155,19 @@ export default {
 
             let that = this; //拿到外面的this
             // 获取token
-            let params = {
-              space: this.ruleForm.region,
-              name: this.ruleForm.name + "-" + Date.now() + this.ruleForm.suffix,
-            };
+            let params = null;
+            if (this.timestamp) {
+              params = {
+                space: this.ruleForm.region,
+                name: this.ruleForm.name + "-" + Date.now() + this.ruleForm.suffix,
+              };
+            } else {
+              params = {
+                space: this.ruleForm.region,
+                name: this.ruleForm.name + this.ruleForm.suffix,
+              };
+            }
+
             let res = await getQiNiuTokenApi(params);
             this.qiniu_token = res.uploadToken;
             // console.log(this.qiniu_token);
@@ -379,7 +393,7 @@ export default {
 
             // 文件类型格式处理
             this.ifFileType = fileType(type);
-            
+
             // 文件名称输入框聚焦
             this.$refs.is_name_focus.focus();
 

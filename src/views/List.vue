@@ -97,7 +97,7 @@
     <el-dialog style="padding: 0" top="1vh" :visible.sync="dialogVisible" width="80%" @close="closeDialog" :destroy-on-close="true">
       <span slot="title" class="Gradual">文件预览</span>
       <div class="dialog" style="position: relative">
-        <span v-show="fileDetail.file_type == 0" style="position: absolute; left: 0%; top: -3%; font-family: 'consolas'; background-color: #eaecef; padding: 2px 4px; border-radius: 3px"
+        <span v-show="fileDetail.file_type == 0" style="position: absolute; left: 0%; top: -4%; font-family: 'consolas'; background-color: #eaecef; padding: 2px 4px; border-radius: 3px"
           >图片尺寸: {{ imgWidth }}×{{ imgHeight }}</span
         >
         <div ref="dFile" class="d-file slider">
@@ -489,9 +489,11 @@ export default {
     },
     // list 文件名展示
     getListName(names, suffix) {
-      names = names.split("-");
-      names.pop();
-      names = names.join(" ");
+      if (names.includes("-")) {
+        names = names.split("-");
+        names.pop();
+        names = names.join(" ");
+      }
       return names + suffix;
     },
     // 跳转页面到用户
