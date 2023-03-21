@@ -156,7 +156,8 @@ export default {
             let that = this; //拿到外面的this
             // 获取token
             let params = null;
-            if (this.timestamp) {
+            // console.log("是否添加时间戳", this.ruleForm.timestamp);
+            if (this.ruleForm.timestamp) {
               params = {
                 space: this.ruleForm.region,
                 name: this.ruleForm.name + "-" + Date.now() + this.ruleForm.suffix,

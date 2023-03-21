@@ -218,7 +218,7 @@
             </li>
             <li>
               <span>文件备注信息:</span>
-              <code style="font-family: xp; color: #6a9955; cursor: pointer">&nbsp; {{ fileDetail.file_remark }}</code>
+              <code style="font-family: xp; color: #6a9955; white-space: pre-wrap">&nbsp; {{ fileDetail.file_remark }}</code>
             </li>
           </ul>
           <!-- 下载按钮 -->
