@@ -49,6 +49,8 @@ export function fileType(type) {
     counter = 9;
   } else if (type.includes(".exe")) {
     counter = 10;
+  } else if (type.includes(".md")) {
+    counter = 12;
   } else if (
     type.includes(".js") ||
     type.includes(".ts") ||

@@ -73,6 +73,9 @@
         <div @click="openTxt(index)" v-else-if="item.file_type == 11" style="display: flex; justify-content: center">
           <img style="width: 88px; height: 88px" src="../assets/types/11.png" alt="" />
         </div>
+        <div @click="openTxt(index)" v-else-if="item.file_type == 12" style="display: flex; justify-content: center">
+          <img style="width: 88px; height: 88px" src="../assets/types/12.png" alt="" />
+        </div>
         <!-- 角标 -->
         <div class="tag"><img :src="require(`../assets/types/${item.file_type}.png`)" alt="" /></div>
         <!-- 文件信息 -->
@@ -177,6 +180,9 @@
             <img style="width: 128px; height: 128px" src="../assets/types/10.png" alt="" />
           </div>
           <div v-else-if="fileDetail.file_type == 11">
+            <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.16em" v-html="txtInfo"></div>
+          </div>
+          <div v-else-if="fileDetail.file_type == 12">
             <div style="white-space: pre-wrap; font-size: 16px; line-height: 1.16em" v-html="txtInfo"></div>
           </div>
           <!-- 下载进度条展示 -->
