@@ -1,7 +1,7 @@
 <template>
   <div class="UploadImg">
     <!-- 标题背景图片 -->
-    <div class="top"></div>
+    <!-- <div class="top"></div> -->
     <!-- 上传区域 -->
     <div ref="drag" class="up" id="drop_area" @paste="pasting">
       <div class="xiugai" v-show="ifFileType !== -1">
@@ -141,7 +141,9 @@ export default {
   methods: {
     getSize,
     fileType,
+
     submitForm(formName) {
+      // console.log(this.idUpBtn);
       if (this.idUpBtn == true) {
         return this.$message({
           message: "请勿重复上传!",
@@ -149,6 +151,15 @@ export default {
           duration: 2000,
         });
       }
+      // 表示该文件已经上传完毕
+      if (this.idUpBtn == false && this.proceed == 100) {
+        return this.$message({
+          message: "该文件已经上传完毕!",
+          type: "error",
+          duration: 2000,
+        });
+      }
+
       // 判断当前的按钮是否是禁用状态。
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
@@ -363,10 +374,12 @@ export default {
       document.addEventListener("keyup", this.enterKey);
     },
     enterKey(e) {
-      if (e.key == "Enter") {
-        this.submitForm("ruleForm");
-      }
+      // console.log(e);
+      // if (e.key == "ArrowUp") {
+      //   this.submitForm("ruleForm");
+      // }
     },
+
     //粘贴板上传图片 在监听事件里，判断是文本就粘贴文本，是图片就走上传方法
     pasting(event) {
       // 根据进度条判断是否应该上传文件。
@@ -385,25 +398,32 @@ export default {
       // console.log(items);
       if (items.length) {
         for (let i = 0; i < items.length; i++) {
-          if (items[i].type.indexOf("image") !== -1) {
-            file = items[i].getAsFile();
-            // console.log(file);
-            // 上传文件操作
-            this.fileDetail = file;
-            let names = this.fileDetail.name.split(".");
-            this.ruleForm.name = names[0]; //获取文件名称
-            this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
-            let type = this.fileDetail.name;
-
-            // 文件类型格式处理
-            this.ifFileType = fileType(type);
-
-            // 文件名称输入框聚焦
-            this.$refs.is_name_focus.focus();
-
-            this.url = getObjectURL(this.fileDetail);
-            break;
+          // if (items[i].type.indexOf("image") !== -1) {
+          file = items[i].getAsFile();
+          // 根据文件大小,判断上传的文件是不是文件夹
+          if (file.size == 0) {
+            return this.$message({
+              message: "暂不支持上传文件夹!",
+              type: "warning",
+              duration: 2000,
+            });
           }
+          // 上传文件操作
+          this.fileDetail = file;
+          let names = this.fileDetail.name.split(".");
+          this.ruleForm.name = names[0]; //获取文件名称
+          this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
+          let type = this.fileDetail.name;
+
+          // 文件类型格式处理
+          this.ifFileType = fileType(type);
+
+          // 文件名称输入框聚焦
+          this.$refs.is_name_focus.focus();
+
+          this.url = getObjectURL(this.fileDetail);
+          break;
+          // }
         }
       }
     },

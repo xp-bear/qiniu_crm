@@ -222,9 +222,9 @@
               <span style="width: 85px">文件浏览量:</span>
               <span @click="copyLink(fileDetail.file_view)" style="cursor: pointer; flex: 1" class="eclipse">{{ fileDetail.file_view }} 次</span>
             </li>
-            <li>
-              <span>文件备注信息:</span>
-              <code style="font-family: xp; color: #6a9955; white-space: pre-wrap">&nbsp; {{ fileDetail.file_remark }}</code>
+            <li style="display: flex; align-items: center">
+              <span style="width: 85px">备注信息:</span>
+              <span style="color: #6a9955; font-weight: 700; white-space: pre-wrap">{{ fileDetail.file_remark }}</span>
             </li>
           </ul>
           <!-- 下载按钮 -->
@@ -1054,26 +1054,28 @@ export default {
       overflow: hidden;
       /deep/.el-tag {
         font-size: 16px;
-        font-family: xp;
+        font-family: conlas;
         letter-spacing: 0.05em;
       }
       ul {
         li {
           list-style: none;
           margin-bottom: 20px;
+          font-size: 14px;
           span {
             &:nth-child(1) {
               text-align: right;
-              font-family: xp;
+              font-family: conlas;
             }
             &:nth-child(2) {
-              font-family: xp;
+              font-family: conlas;
               padding: 5px 8px;
               border-radius: 3px;
               border: 1px solid transparent;
               background-image: linear-gradient(60deg, #f12711, #f5af19);
               background-clip: text;
               color: transparent;
+              font-weight: 700;
 
               // &:hover {
               //   border: 1px solid #409eff60;
