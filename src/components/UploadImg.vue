@@ -95,7 +95,7 @@
         </el-form-item>
 
         <el-form-item label="备注信息">
-          <el-input type="textarea" v-model="ruleForm.remarkName" placeholder="请填写备注信息" style="width: 100%"></el-input>
+          <el-input type="textarea" v-model="ruleForm.remarkName" placeholder="请填写备注信息" style="width: 100%" @focus="loseFoucs" @blur="loseFocus"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button class="up-btn diffBg" type="primary" @click="submitForm('ruleForm')">确认上传</el-button>
@@ -135,12 +135,21 @@ export default {
       idUpBtn: false, //上传按钮状态 true禁止上传
       fileAddress: "", //图片的地理位置
       // is_name_focus: false, //名字输入框是否聚焦
+      isFocusState: false, // 备注信息框状态
     };
   },
 
   methods: {
     getSize,
     fileType,
+    //备注信息失去焦点
+    loseFocus() {
+      this.isFocusState = false;
+    },
+    //备注信息获得焦点
+    loseFoucs() {
+      this.isFocusState = true;
+    },
 
     submitForm(formName) {
       // console.log(this.idUpBtn);
@@ -375,9 +384,9 @@ export default {
     },
     enterKey(e) {
       // console.log(e);
-      // if (e.key == "ArrowUp") {
-      //   this.submitForm("ruleForm");
-      // }
+      if (e.key == "Enter" && this.isFocusState == false) {
+        this.submitForm("ruleForm");
+      }
     },
 
     //粘贴板上传图片 在监听事件里，判断是文本就粘贴文本，是图片就走上传方法
