@@ -405,10 +405,17 @@ export default {
       let file = null; //要上传的文件
       const items = (event.clipboardData || window.clipboardData).items;
       // console.log(items);
+
       if (items.length) {
         for (let i = 0; i < items.length; i++) {
           // if (items[i].type.indexOf("image") !== -1) {
           file = items[i].getAsFile();
+          // console.log(file);
+          // 没有文件
+          if (!file) {
+            return this.$message({ message: "浏览器同源策略,不允许跨域!", type: "warning", duration: 2000 });
+          }
+
           // 根据文件大小,判断上传的文件是不是文件夹
           if (file.size == 0) {
             return this.$message({
