@@ -793,6 +793,9 @@ export default {
   /deep/.el-message-box__wrapper {
     z-index: 99999 !important;
   }
+  /deep/.el-dialog__wrapper {
+    overflow: hidden;
+  }
   width: 1200px;
   margin: 0 auto;
   .pdfobject-container {

@@ -332,6 +332,16 @@ export default {
 </script>
 <style lang="less" scoped>
 .LoginView {
+  // 媒体查询
+  @media screen and (max-width: 580px) {
+    background: #dbdedf !important;
+    .login {
+      width: 100% !important;
+    }
+    .register {
+      width: 100% !important;
+    }
+  }
   /deep/.el-input__inner {
     padding-left: 34px;
     height: 40px;
@@ -362,7 +372,7 @@ export default {
 
   width: 100%;
   height: 100vh;
-  background-image: url(http://cdn.xxoutman.cn/qiniu_bg-1676171779647.png?1676171780442);
+  background-image: url(http://cdn.xxoutman.cn/loginbg-1694434476168.png?1694434476955);
   background-size: cover;
   display: flex;
   justify-content: center;
