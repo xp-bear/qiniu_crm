@@ -411,16 +411,10 @@ export default {
       if (clipboardData.items) {
         for (let i = 0; i < clipboardData.items.length; i++) {
           const item = clipboardData.items[i];
-          if (item.type.indexOf("image") !== -1) {
+          console.log(item.type);
+          if (item.type.indexOf("image") !== -1 || item.type.indexOf("video") !== -1 || item.type.indexOf("text") !== -1 || item.type.indexOf("zip") !== -1 || item.type.indexOf("pdf") !== -1) {
             const file = item.getAsFile();
-            // 根据文件大小,判断上传的文件是不是文件夹
-            if (file.size == 0) {
-              return this.$message({
-                message: "暂不支持上传文件夹!",
-                type: "warning",
-                duration: 2000,
-              });
-            }
+
             // 上传文件操作
             this.fileDetail = file;
             let names = this.fileDetail.name.split(".");
