@@ -412,7 +412,7 @@ export default {
         for (let i = 0; i < clipboardData.items.length; i++) {
           const item = clipboardData.items[i];
           console.log(item.type);
-          if (item.type.indexOf("image") !== -1 || item.type.indexOf("video") !== -1 || item.type.indexOf("text") !== -1 || item.type.indexOf("zip") !== -1 || item.type.indexOf("pdf") !== -1) {
+          if (item.type.indexOf("image") !== -1 || item.type.indexOf("video") !== -1 || item.type.indexOf("zip") !== -1) {
             const file = item.getAsFile();
 
             // 上传文件操作
