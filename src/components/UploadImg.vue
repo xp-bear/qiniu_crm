@@ -403,43 +403,40 @@ export default {
       this.idUpBtn = false; //启用上传
       this.proceed = 0;
       let file = null; //要上传的文件
-      const items = (event.clipboardData || window.clipboardData).items;
-      // console.log(items);
+      // 获取粘贴的数据
+      const clipboardData = event.clipboardData || window.clipboardData;
+      if (!clipboardData) return;
 
-      if (items.length) {
-        for (let i = 0; i < items.length; i++) {
-          // if (items[i].type.indexOf("image") !== -1) {
-          file = items[i].getAsFile();
-          // console.log(file);
-          // 没有文件
-          if (!file) {
-            return this.$message({ message: "浏览器同源策略,不允许跨域!", type: "warning", duration: 2000 });
+      // 检查是否有图片数据
+      if (clipboardData.items) {
+        for (let i = 0; i < clipboardData.items.length; i++) {
+          const item = clipboardData.items[i];
+          if (item.type.indexOf("image") !== -1) {
+            const file = item.getAsFile();
+            // 根据文件大小,判断上传的文件是不是文件夹
+            if (file.size == 0) {
+              return this.$message({
+                message: "暂不支持上传文件夹!",
+                type: "warning",
+                duration: 2000,
+              });
+            }
+            // 上传文件操作
+            this.fileDetail = file;
+            let names = this.fileDetail.name.split(".");
+            this.ruleForm.name = names[0]; //获取文件名称
+            this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
+            let type = this.fileDetail.name;
+
+            // 文件类型格式处理
+            this.ifFileType = fileType(type);
+
+            // 文件名称输入框聚焦
+            this.$refs.is_name_focus.focus();
+
+            this.url = getObjectURL(this.fileDetail);
+            break;
           }
-
-          // 根据文件大小,判断上传的文件是不是文件夹
-          if (file.size == 0) {
-            return this.$message({
-              message: "暂不支持上传文件夹!",
-              type: "warning",
-              duration: 2000,
-            });
-          }
-          // 上传文件操作
-          this.fileDetail = file;
-          let names = this.fileDetail.name.split(".");
-          this.ruleForm.name = names[0]; //获取文件名称
-          this.ruleForm.suffix = "." + names[names.length - 1]; //获取文件名称
-          let type = this.fileDetail.name;
-
-          // 文件类型格式处理
-          this.ifFileType = fileType(type);
-
-          // 文件名称输入框聚焦
-          this.$refs.is_name_focus.focus();
-
-          this.url = getObjectURL(this.fileDetail);
-          break;
-          // }
         }
       }
     },
